@@ -1,0 +1,25 @@
+{
+    "name": "backend-futbol-app",
+    "version": "1.0.0",
+    "description": "",
+    "main": "dist/index.js",
+    "type": "module",
+    "scripts": {
+        "dev": "tsx watch src/index.ts",
+        "build": "tsc",
+        "start": "node dist/index.js"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "homepage": "https://github.com/PannaMaster-Proyecto-Final-DAW/backend-futbol-app#readme",
+    "dependencies": {
+        "express": "^5.2.1"
+    },
+    "devDependencies": {
+        "@types/express": "^5.0.6",
+        "@types/node": "^25.3.0",
+        "tsx": "^4.21.0",
+        "typescript": "^5.9.3"
+    }
+}
