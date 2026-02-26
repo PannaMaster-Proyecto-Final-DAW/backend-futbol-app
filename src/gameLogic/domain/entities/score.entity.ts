@@ -1,15 +1,12 @@
 import type { User } from "./user.entity.js";
+import type { Game } from "./game.entity.js";
 
 export class Score {
     constructor(
         public id: string,
         public user: User,
-
-        // @QUESTION: Why do I need this attribute?
-        // public challengeId: string,
-
+        public game: Game,
         public points: number,
-        //@QUESTION Why should I use Date here?
-        public createdAt: Date
+        public createdAt: string
     ) { }
 }

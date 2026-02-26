@@ -1,8 +1,10 @@
+import type { User } from "./user.entity.js";
+
 export class UserLeague {
     constructor(
         public id: string,
         public name: string,
-        public inviteCode: string
-        //@QUESTION Maybe it should be related to a user? 
+        public inviteCode: string,
+        public members: User[]
     ) { }
 }

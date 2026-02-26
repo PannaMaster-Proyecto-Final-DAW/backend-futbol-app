@@ -2,8 +2,7 @@ export class User {
     constructor(
         public id: string,
         public userName: string,
-        public currentStreak: number,
         //@QUESTION Which type should I use for the date? I'm not sure if Date is the best option.
-        public LastPlayedAt: Date
+        public lastPlayedAt: string
     ) { }
 }
