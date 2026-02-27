@@ -2,10 +2,26 @@ import { CountryEntity } from "./country.entity.js";
 import { TeamEntity } from "./team.entity.js";
 
 export enum PlayerPosition {
+    // Goalkeeper
     GK = 'GK',
-    DEF = 'DEF',
-    MID = 'MID',
-    FWD = 'FWD'
+
+    // Defender
+    LB = 'LB',
+    RB = 'RB',
+    CB = 'CB',
+
+    // Midfielder
+    LM = 'LM',
+    RM = 'RM',
+    CM = 'CM',
+    CDM = 'CDM',
+    CAM = 'CAM',
+
+    // Forward
+    LW = 'LW',
+    RW = 'RW',
+    CF = 'CF',
+    ST = 'ST'
 }
 
 export class PlayerEntity {
@@ -17,3 +33,4 @@ export class PlayerEntity {
         public country: CountryEntity, // Ref Country
     ) { }
 }
+
