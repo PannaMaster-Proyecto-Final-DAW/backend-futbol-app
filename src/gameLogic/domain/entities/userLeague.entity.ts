@@ -1,10 +1,10 @@
-import type { User } from "./user.entity.js";
+import type { UserLeagueMembership } from "./userLeagueMembership.entity.js";
 
 export class UserLeague {
     constructor(
         public id: string,
         public name: string,
         public inviteCode: string,
-        public members: User[]
+        public members: UserLeagueMembership[]
     ) { }
 }
