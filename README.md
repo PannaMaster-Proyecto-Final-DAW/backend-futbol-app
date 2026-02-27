@@ -48,10 +48,10 @@ We follow a strict branching and commit policy to keep the history clean.
 
 ### Branching Strategy
 * Never push directly to `main`.
-* Create a branch for every task: `feature/task-name` or `fix/bug-name`.
+* Create a branch for every task following the next format: Number of the issue - type of task / task name.
 
 ### Conventional Commits
-Commits must follow this format:
+The type of tasks must be one of the following categories:
 * `feat:` A new feature.
 * `fix:` A bug fix.
 * `docs:` Documentation only changes.
