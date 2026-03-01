@@ -28,7 +28,7 @@ export class PlayerEntity {
     constructor(
         public id: string, // UUID
         public name: string,
-        public position: PlayerPosition,
+        public position: PlayerPosition[],
         public team: TeamEntity, // Ref Team
         public country: CountryEntity, // Ref Country
     ) { }
