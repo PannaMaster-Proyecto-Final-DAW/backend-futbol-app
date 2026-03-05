@@ -1,5 +1,5 @@
 import { UserRepository } from "../../../domain/repositories/user.domain.repositoy.js";
-import { User } from "../../../domain/entities/user.entity.js";
+import { User, UserRole } from "../../../domain/entities/user.entity.js";
 
 //Define a port for the encryption service
 export interface PasswordHasher {
@@ -15,6 +15,7 @@ export interface CreateInput {
     userName: string;
     email: string;
     password: string;
+    role: UserRole;
 }
 
 export class CreateUserUseCase {
@@ -40,7 +41,7 @@ export class CreateUserUseCase {
             input.userName,
             input.email,
             hashedPassword,
-            ''
+            input.role
         );
 
         return this.userRepository.create(newUser);
