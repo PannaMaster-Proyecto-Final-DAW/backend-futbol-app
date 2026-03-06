@@ -1,6 +1,6 @@
 import { PlayerPosition } from "./player.entity.js";
 
-export class FormationEntity {
+export class Formation {
     constructor(
         public id: string, // UUID
         public name: string,
