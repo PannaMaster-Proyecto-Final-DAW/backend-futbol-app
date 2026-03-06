@@ -1,9 +1,9 @@
-import { LeagueEntity } from "./league.entity.js";
+import { League } from "./league.entity.js";
 
-export class TeamEntity {
+export class Team {
     constructor(
         public id: string, // UUID
         public name: string,
-        public league: LeagueEntity, // Ref League
+        public league: League, // Ref League
     ) { }
 }

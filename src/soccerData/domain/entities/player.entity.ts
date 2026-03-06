@@ -1,5 +1,5 @@
-import { CountryEntity } from "./country.entity.js";
-import { TeamEntity } from "./team.entity.js";
+import { Country } from "./country.entity.js";
+import { Team } from "./team.entity.js";
 
 export enum PlayerPosition {
     // Goalkeeper
@@ -24,13 +24,13 @@ export enum PlayerPosition {
     ST = 'ST'
 }
 
-export class PlayerEntity {
+export class Player {
     constructor(
         public id: string, // UUID
         public name: string,
         public position: PlayerPosition[],
-        public team: TeamEntity, // Ref Team
-        public country: CountryEntity, // Ref Country
+        public team: Team, // Ref Team
+        public country: Country, // Ref Country
     ) { }
 }
 
