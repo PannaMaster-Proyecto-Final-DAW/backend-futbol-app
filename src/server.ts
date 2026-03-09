@@ -24,9 +24,11 @@ app.use(express.json());
 
 import { countryRouter } from "./soccerData/infrastructure/routes/country.routes.js";
 import { leagueRouter } from "./soccerData/infrastructure/routes/league.routes.js";
+import { teamRouter } from "./soccerData/infrastructure/routes/team.routes.js";
 
 app.use("/api/countries", countryRouter);
 app.use("/api/leagues", leagueRouter);
+app.use("/api/teams", teamRouter);
 
 app.listen(PORT, async () => {
     // await connectDB(); // TODO: Uncomment when database config is ready
