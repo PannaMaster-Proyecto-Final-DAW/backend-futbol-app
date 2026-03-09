@@ -6,7 +6,7 @@ dotenv.config();
 // import { connectDB } from './infrastructure/config/postgres.config.js'; // TODO: Create database config
 
 const app = express();
-const PORT = process.env.PORT || 4000;
+const PORT = process.env.PORT;
 
 // Middlewares
 app.use(express.json());
@@ -23,8 +23,10 @@ app.get('/', (req, res) => {
 app.use(express.json());
 
 import { countryRouter } from "./soccerData/infrastructure/routes/country.routes.js";
+import { leagueRouter } from "./soccerData/infrastructure/routes/league.routes.js";
 
-app.use("/countries", countryRouter);
+app.use("/api/countries", countryRouter);
+app.use("/api/leagues", leagueRouter);
 
 app.listen(PORT, async () => {
     // await connectDB(); // TODO: Uncomment when database config is ready
