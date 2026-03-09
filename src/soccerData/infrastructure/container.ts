@@ -1,6 +1,6 @@
 // In-Memory Implementation
 import { InMemoryCountryRepository } from "./repositories/in-memory-country.js";
-import { InMemoryLeagueRepository } from "./repositories/in-memory-league.js";
+import { InMemoryLeagueRepository } from "./repositories/in-memory-league.repository.js";
 
 // Services
 import { UuidGenerator } from "./services/uuid-generator.js";
