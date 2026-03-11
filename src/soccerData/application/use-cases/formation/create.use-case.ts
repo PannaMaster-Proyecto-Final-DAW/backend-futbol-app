@@ -11,9 +11,10 @@ export interface IdGenerator {
 export interface CreateFormationInput {
     name: string;
     goalkeeper?: PlayerPosition;
-    defenders: PlayerPosition[];
-    midfielders: PlayerPosition[];
-    forwards: PlayerPosition[];
+    defenders?: PlayerPosition[];
+    midfielders?: PlayerPosition[];
+    forwards?: PlayerPosition[];
+    positionsList?: PlayerPosition[];
 }
 
 // Use Case to create a new formation
@@ -32,15 +33,27 @@ export class CreateFormationUseCase {
         // 1. Generates a unique ID 
         const id = this.idGenerator.generateId();
 
-        // 2. Creates the formation entity
-        const formation = new Formation(
-            id,
-            input.name,
-            input.goalkeeper ?? PlayerPosition.GK,
-            input.defenders,
-            input.midfielders,
-            input.forwards
-        );
+        let formation: Formation;
+
+        // 2. Decide creation mode
+        if (input.positionsList && input.positionsList.length > 0) {
+            // Validation: Ensure exactly 11 players are provided for automatic mode
+            if (input.positionsList.length !== 11) {
+                throw new Error(`Formation creation failed: Expected 11 positions, but received ${input.positionsList.length}.`);
+            }
+            // Automatic Classification Mode
+            formation = Formation.createFromPositionsList(id, input.name, input.positionsList);
+        } else {
+            // Manual Mode
+            formation = new Formation(
+                id,
+                input.name,
+                input.goalkeeper ?? PlayerPosition.GK,
+                input.defenders ?? [],
+                input.midfielders ?? [],
+                input.forwards ?? []
+            );
+        }
 
         // 3. Saves the formation using the repository
         return this.formationRepository.create(formation);
