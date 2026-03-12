@@ -72,6 +72,7 @@ export class CountryController {
         }
     }
 
+    // Get country by name
     async getByName(req: Request, res: Response): Promise<void> {
         try {
             const { name } = req.params;
@@ -86,6 +87,7 @@ export class CountryController {
         }
     }
 
+    // Update a country
     async update(req: Request, res: Response): Promise<void> {
         try {
             const { id } = req.params;
@@ -101,6 +103,7 @@ export class CountryController {
         }
     }
 
+    // Delete a country
     async delete(req: Request, res: Response): Promise<void> {
         try {
             const { id } = req.params;
