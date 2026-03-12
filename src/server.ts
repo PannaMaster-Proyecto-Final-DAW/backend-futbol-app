@@ -17,13 +17,14 @@ import { countryRouter } from "./soccerData/infrastructure/routes/country.routes
 import { formationRouter } from "./soccerData/infrastructure/routes/formation.routes.js";
 import { leagueRouter } from "./soccerData/infrastructure/routes/league.routes.js";
 import { teamRouter } from "./soccerData/infrastructure/routes/team.routes.js";
+import { playerRouter } from "./soccerData/infrastructure/routes/player.routes.js";
 
 app.use('/api/user', userRouter);
 app.use("/api/countries", countryRouter);
 app.use("/api/formations", formationRouter);
-app.use("/api/countries", countryRouter);
 app.use("/api/leagues", leagueRouter);
 app.use("/api/teams", teamRouter);
+app.use("/api/players", playerRouter);
 
 app.get('/', (req, res) => {
     res.send('Server is running correctly! 🚀');

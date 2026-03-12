@@ -1,0 +1,67 @@
+import type { PlayerRepository } from "../../../domain/repositories/player.domain.repository.js";
+import { Player, PlayerPosition } from "../../../domain/entities/player.entity.js";
+import type { TeamRepository } from "../../../domain/repositories/team.domain.repository.js";
+import type { CountryRepository } from "../../../domain/repositories/country.domain.repository.js";
+
+export interface UpdatePlayerInput {
+    name?: string;
+    position?: PlayerPosition[];
+    teamId?: string;
+    countryId?: string;
+}
+
+/**
+ * Use Case to update an existing player.
+ * Updates only the fields provided in the INPUT.
+ */
+export class UpdatePlayerUseCase {
+    constructor(
+        private readonly playerRepository: PlayerRepository,
+        private readonly teamRepository: TeamRepository,
+        private readonly countryRepository: CountryRepository,
+    ) { }
+
+    /**
+     * Executes the update process.
+     * 1. Fetches the player by ID to ensure it exists.
+     * 2. Modifies only the fields that are present in the INPUT.
+     * 3. Persists the changes.
+     * 
+     * @param id - The ID of the player to update.
+     * @param input - Data Transfer Object containing partial updates.
+     * @returns The updated Player entity.
+     */
+    async execute(id: string, input: UpdatePlayerInput): Promise<Player> {
+        const player = await this.playerRepository.getById(id);
+        if (!player) {
+            throw new Error(`Player with id ${id} not found`);
+        }
+
+        // We use strict check ( !== undefined ) to allow updates to falsy values
+        if (input.name !== undefined) player.name = input.name;
+        if (input.position !== undefined) player.position = input.position;
+
+        if (input.teamId !== undefined) {
+            const team = await this.teamRepository.getById(input.teamId);
+            if (!team) {
+                throw new Error(`Team with id ${input.teamId} not found`);
+            }
+            player.team = team;
+        }
+
+        if (input.countryId !== undefined) {
+            const country = await this.countryRepository.getById(input.countryId);
+            if (!country) {
+                throw new Error(`Country with id ${input.countryId} not found`);
+            }
+            player.country = country;
+        }
+
+        const updatedPlayer = await this.playerRepository.update(id, player);
+        if (!updatedPlayer) {
+            throw new Error(`Player with id ${id} could not be updated`);
+        }
+
+        return updatedPlayer;
+    }
+}
