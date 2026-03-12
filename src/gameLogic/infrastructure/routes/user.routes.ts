@@ -35,10 +35,10 @@ const userController = new UserController(
 
 router.post('/', userController.create);
 router.get('/', userController.getAll);
-router.get('/search/id/:id', userController.getById);
-router.get('/search/username/:userName', userController.getByUserName);
-router.get('/search/email/:email', userController.getByEmail);
-router.get('/search/role/:role', userController.getByRole);
+router.get('/id/:id', userController.getById);
+router.get('/username/:userName', userController.getByUserName);
+router.get('/email/:email', userController.getByEmail);
+router.get('/role/:role', userController.getByRole);
 router.patch('/:id', userController.update);
 router.delete('/:id', userController.delete);
 
