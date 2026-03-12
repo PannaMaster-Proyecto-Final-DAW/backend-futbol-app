@@ -13,8 +13,10 @@ app.use(express.json());
 
 // Routes
 import { userRouter } from './gameLogic/infrastructure/routes/user.routes.js';
+import { userLeagueRouter } from './gameLogic/infrastructure/routes/user-league.routes.js';
 
 app.use('/api/user', userRouter);
+app.use('/api/user-league', userLeagueRouter);
 
 app.get('/', (req, res) => {
     res.send('Server is running correctly! 🚀');
