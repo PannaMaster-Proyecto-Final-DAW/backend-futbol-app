@@ -1,6 +1,6 @@
 import { Team } from "../../../domain/entities/team.entity.js";
 import { TeamRepository } from "../../../domain/repositories/team.domain.repository.js";
-import { League } from "../../../domain/entities/league.entity.js";
+import { LeagueRepository } from "../../../domain/repositories/league.domain.repository.js";
 
 // Port ID generation 
 export interface IdGenerator {
@@ -10,13 +10,14 @@ export interface IdGenerator {
 // Input for Team creation
 export interface CreateTeamInput {
     name: string;
-    league: League;
+    leagueId: string;
 }
 
 // Use Case to create a new team
 export class CreateTeamUseCase {
     constructor(
         private readonly teamRepository: TeamRepository,
+        private readonly leagueRepository: LeagueRepository,
         private readonly idGenerator: IdGenerator
     ) { }
 
@@ -26,13 +27,19 @@ export class CreateTeamUseCase {
      * @returns The created team
      */
     async execute(input: CreateTeamInput): Promise<Team> {
-        // 1. Generates a unique ID 
+        // 1. Fetch the league by ID
+        const league = await this.leagueRepository.getById(input.leagueId);
+        if (!league) {
+            throw new Error(`League with id ${input.leagueId} not found`);
+        }
+
+        // 2. Generates a unique ID 
         const id = this.idGenerator.generateId();
 
-        // 2. Creates the team entity
-        const team = new Team(id, input.name, input.league);
+        // 3. Creates the team entity
+        const team = new Team(id, input.name, league);
 
-        // 3. Saves the team using the repository
+        // 4. Saves the team using the repository
         return this.teamRepository.create(team);
     }
 }

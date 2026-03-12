@@ -13,12 +13,12 @@ import { GetLeagueByCountryUseCase } from "../../application/use-cases/league/ge
 import { GetLeagueByCategoryUseCase } from "../../application/use-cases/league/get-by-category.use-case.js";
 import { UpdateLeagueUseCase } from "../../application/use-cases/league/update.use-case.js";
 import { DeleteLeagueUseCase } from "../../application/use-cases/league/delete.use-case.js";
-import { idGenerator, leagueRepository } from "../container.js";
+import { countryRepository, idGenerator, leagueRepository } from "../container.js";
 
 const router = Router();
 
 // Dependency Injection (Manual)
-const createLeagueUseCase = new CreateLeagueUseCase(leagueRepository, idGenerator);
+const createLeagueUseCase = new CreateLeagueUseCase(leagueRepository, countryRepository, idGenerator);
 const getAllLeagueUseCase = new GetAllLeagueUseCase(leagueRepository);
 const getLeagueByIdUseCase = new GetLeagueByIdUseCase(leagueRepository);
 const getLeagueByNameUseCase = new GetLeagueByNameUseCase(leagueRepository);
