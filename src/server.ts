@@ -13,13 +13,22 @@ app.use(express.json());
 
 // Routes
 import { userRouter } from './gameLogic/infrastructure/routes/user.routes.js';
+import { userLeagueRouter } from './gameLogic/infrastructure/routes/user-league.routes.js';
+
+app.use('/api/user', userRouter);
+app.use('/api/user-league', userLeagueRouter);
+
+app.get('/', (req, res) => {
+    res.send('Server is running correctly! 🚀');
+});
+
+app.use(express.json());
+
 import { countryRouter } from "./soccerData/infrastructure/routes/country.routes.js";
 import { formationRouter } from "./soccerData/infrastructure/routes/formation.routes.js";
 import { leagueRouter } from "./soccerData/infrastructure/routes/league.routes.js";
 import { teamRouter } from "./soccerData/infrastructure/routes/team.routes.js";
 
-app.use('/api/user', userRouter);
-app.use("/api/countries", countryRouter);
 app.use("/api/formations", formationRouter);
 app.use("/api/countries", countryRouter);
 app.use("/api/leagues", leagueRouter);
