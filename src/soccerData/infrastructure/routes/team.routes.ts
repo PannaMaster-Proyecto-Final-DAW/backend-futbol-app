@@ -12,12 +12,12 @@ import { GetAllTeamUseCase } from "../../application/use-cases/team/get-all.use-
 import { GetTeamByIdUseCase } from "../../application/use-cases/team/get-by-id.use-case.js";
 import { GetTeamByNameUseCase } from "../../application/use-cases/team/get-by-name.use-case.js";
 import { GetTeamsByLeagueUseCase } from "../../application/use-cases/team/get-by-league.use-case.js";
-import { idGenerator, teamRepository } from "../container.js";
+import { idGenerator, leagueRepository, teamRepository } from "../container.js";
 
 const router = Router();
 
 // Dependency Injection (Manual)
-const createTeamUseCase = new CreateTeamUseCase(teamRepository, idGenerator);
+const createTeamUseCase = new CreateTeamUseCase(teamRepository, leagueRepository, idGenerator);
 const updateTeamUseCase = new UpdateTeamUseCase(teamRepository);
 const deleteTeamUseCase = new DeleteTeamUseCase(teamRepository);
 const getAllTeamUseCase = new GetAllTeamUseCase(teamRepository);

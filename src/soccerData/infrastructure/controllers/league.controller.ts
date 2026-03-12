@@ -32,8 +32,8 @@ export class LeagueController {
 
     async create(req: Request, res: Response): Promise<void> {
         try {
-            const { name, country, category } = req.body;
-            const league = await this.createLeagueUseCase.execute({ name, country, category });
+            const { name, countryId, category } = req.body;
+            const league = await this.createLeagueUseCase.execute({ name, countryId, category });
             res.status(201).json(league);
         } catch (error: any) {
             res.status(400).json({ error: error.message });
