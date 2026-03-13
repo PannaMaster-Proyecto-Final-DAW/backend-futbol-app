@@ -28,8 +28,8 @@ export class TeamController {
 
     async create(req: Request, res: Response): Promise<void> {
         try {
-            const { name, league } = req.body;
-            const team = await this.createTeamUseCase.execute({ name, league });
+            const { name, leagueId } = req.body;
+            const team = await this.createTeamUseCase.execute({ name, leagueId });
             res.status(201).json(team);
         } catch (error: any) {
             res.status(400).json({ error: error.message });

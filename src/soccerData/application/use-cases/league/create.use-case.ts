@@ -1,6 +1,6 @@
 import { League, LeagueCategory } from "../../../domain/entities/league.entity.js";
 import { LeagueRepository } from "../../../domain/repositories/league.domain.repository.js";
-import { Country } from "../../../domain/entities/country.entity.js";
+import { CountryRepository } from "../../../domain/repositories/country.domain.repository.js";
 
 // Port ID generation 
 export interface IdGenerator {
@@ -10,7 +10,7 @@ export interface IdGenerator {
 // Input for League creation
 export interface CreateLeagueInput {
     name: string;
-    country: Country;
+    countryId: string;
     category: LeagueCategory;
 }
 
@@ -18,6 +18,7 @@ export interface CreateLeagueInput {
 export class CreateLeagueUseCase {
     constructor(
         private readonly leagueRepository: LeagueRepository,
+        private readonly countryRepository: CountryRepository,
         private readonly idGenerator: IdGenerator
     ) { }
 
@@ -27,13 +28,19 @@ export class CreateLeagueUseCase {
      * @returns The created league
      */
     async execute(input: CreateLeagueInput): Promise<League> {
-        // 1. Generates a unique ID 
+        // 1. Fetch the country by ID
+        const country = await this.countryRepository.getById(input.countryId);
+        if (!country) {
+            throw new Error(`Country with id ${input.countryId} not found`);
+        }
+
+        // 2. Generates a unique ID 
         const id = this.idGenerator.generateId();
 
-        // 2. Creates the league entity
-        const league = new League(id, input.name, input.country, input.category);
+        // 3. Creates the league entity
+        const league = new League(id, input.name, country, input.category);
 
-        // 3. Saves the league using the repository
+        // 4. Saves the league using the repository
         return this.leagueRepository.create(league);
     }
 }
