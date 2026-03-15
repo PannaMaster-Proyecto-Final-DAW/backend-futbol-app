@@ -32,8 +32,21 @@ export class LeagueController {
 
     async create(req: Request, res: Response): Promise<void> {
         try {
-            const { name, countryId, category } = req.body;
-            const league = await this.createLeagueUseCase.execute({ name, countryId, category });
+            const { name, countryId, category, country } = req.body;
+
+            // To be robust and solve the user's error, we extract countryId from 
+            // either countryId OR country.id (common mistake in nested bodies)
+            const finalCountryId = countryId || (country && country.id);
+
+            if (!finalCountryId) {
+                throw new Error("countryId is required (can be flat countryId or { country: { id } })");
+            }
+
+            const league = await this.createLeagueUseCase.execute({
+                name,
+                countryId: finalCountryId,
+                category
+            });
             res.status(201).json(league);
         } catch (error: any) {
             res.status(400).json({ error: error.message });

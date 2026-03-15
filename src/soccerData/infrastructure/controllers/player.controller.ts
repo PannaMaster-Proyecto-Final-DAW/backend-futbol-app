@@ -66,7 +66,7 @@ export class PlayerController {
             const id = req.params.id as string;
             const result = await this.deletePlayerUseCase.execute(id);
             if (result) {
-                res.status(204).send();
+                res.status(200).json(true);
             } else {
                 res.status(404).json({ error: "Player not found" });
             }
