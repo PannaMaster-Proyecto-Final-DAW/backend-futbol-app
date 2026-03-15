@@ -3,7 +3,7 @@ import { CountryRepository } from "../../../domain/repositories/country.domain.r
 
 // Port ID generation
 export interface IdGenerator {
-    generateId(): string;
+    generate(): string;
 }
 
 // Input for Country creation
@@ -26,7 +26,7 @@ export class CreateCountryUseCase {
 
     async execute(input: CreateCountryInput): Promise<Country> {
         // 1. Generates a unique ID 
-        const id = this.idGenerator.generateId();
+        const id = this.idGenerator.generate();
 
         // 2. Creates the country entity
         const country = new Country(id, input.name);

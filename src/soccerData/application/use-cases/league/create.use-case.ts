@@ -1,10 +1,10 @@
-import { League, LeagueCategory } from "../../../domain/entities/league.entity.js";
-import { LeagueRepository } from "../../../domain/repositories/league.domain.repository.js";
-import { CountryRepository } from "../../../domain/repositories/country.domain.repository.js";
+import type { League, LeagueCategory } from "../../../domain/entities/league.entity.js";
+import type { LeagueRepository } from "../../../domain/repositories/league.domain.repository.js";
+import type { CountryRepository } from "../../../domain/repositories/country.domain.repository.js";
 
 // Port ID generation 
 export interface IdGenerator {
-    generateId(): string;
+    generate(): string;
 }
 
 // Input for League creation
@@ -24,6 +24,11 @@ export class CreateLeagueUseCase {
 
     /**
      * Executes the creation of a league
+     * 1. Fetches the country by ID
+     * 2. Generates a unique ID
+     * 3. Creates the league entity
+     * 4. Saves the league using the repository
+     * 
      * @param input - The input data for creating a league
      * @returns The created league
      */
@@ -35,12 +40,26 @@ export class CreateLeagueUseCase {
         }
 
         // 2. Generates a unique ID 
-        const id = this.idGenerator.generateId();
+        const newId = this.idGenerator.generate();
 
         // 3. Creates the league entity
-        const league = new League(id, input.name, country, input.category);
+        const newLeague = {
+            id: newId,
+            name: input.name,
+            country: country,
+            category: input.category
+        } as League; // Note: Assuming League can be instantiated this way or has a constructor accepting these
+
+        // Note: If League is a class, use: const newLeague = new League(newId, input.name, country, input.category);
+        // Let's use the constructor as seen in the original file
+        const leagueInstance = new (await import("../../../domain/entities/league.entity.js")).League(
+            newId, 
+            input.name, 
+            country, 
+            input.category
+        );
 
         // 4. Saves the league using the repository
-        return this.leagueRepository.create(league);
+        return this.leagueRepository.create(leagueInstance);
     }
 }

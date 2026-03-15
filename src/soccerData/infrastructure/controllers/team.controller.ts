@@ -28,8 +28,16 @@ export class TeamController {
 
     async create(req: Request, res: Response): Promise<void> {
         try {
-            const { name, leagueId } = req.body;
-            const team = await this.createTeamUseCase.execute({ name, leagueId });
+            const { name, leagueId, league } = req.body;
+            
+            // Extract leagueId robustly
+            const finalLeagueId = leagueId || (league && league.id);
+
+            if (!finalLeagueId) {
+                throw new Error("leagueId is required");
+            }
+
+            const team = await this.createTeamUseCase.execute({ name, leagueId: finalLeagueId });
             res.status(201).json(team);
         } catch (error: any) {
             res.status(400).json({ error: error.message });
@@ -39,8 +47,15 @@ export class TeamController {
     async update(req: Request, res: Response): Promise<void> {
         try {
             const id = req.params.id as string;
-            const { name, league } = req.body;
-            const team = await this.updateTeamUseCase.execute({ id, name, league });
+            const { name, leagueId, league } = req.body;
+            
+            const finalLeagueId = leagueId || (league && league.id);
+
+            const team = await this.updateTeamUseCase.execute({ 
+                id, 
+                name, 
+                leagueId: finalLeagueId 
+            });
             if (!team) {
                 res.status(404).json({ error: "Team not found" });
                 return;

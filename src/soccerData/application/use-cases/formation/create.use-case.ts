@@ -4,7 +4,7 @@ import { PlayerPosition } from "../../../domain/entities/player.entity.js";
 
 // Port ID generation
 export interface IdGenerator {
-    generateId(): string;
+    generate(): string;
 }
 
 // Input for Formation creation
@@ -31,7 +31,7 @@ export class CreateFormationUseCase {
      */
     async execute(input: CreateFormationInput): Promise<Formation> {
         // 1. Generates a unique ID 
-        const id = this.idGenerator.generateId();
+        const id = this.idGenerator.generate();
 
         let formation: Formation;
 

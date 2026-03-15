@@ -4,7 +4,7 @@ import { LeagueRepository } from "../../../domain/repositories/league.domain.rep
 
 // Port ID generation 
 export interface IdGenerator {
-    generateId(): string;
+    generate(): string;
 }
 
 // Input for Team creation
@@ -34,7 +34,7 @@ export class CreateTeamUseCase {
         }
 
         // 2. Generates a unique ID 
-        const id = this.idGenerator.generateId();
+        const id = this.idGenerator.generate();
 
         // 3. Creates the team entity
         const team = new Team(id, input.name, league);
