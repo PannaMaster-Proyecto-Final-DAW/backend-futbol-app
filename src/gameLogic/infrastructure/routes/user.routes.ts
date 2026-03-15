@@ -1,5 +1,9 @@
+// Express
 import { Router } from 'express';
+
+// Controller
 import { UserController } from '../controllers/user.controller.js';
+// Use Cases
 import { CreateUserUseCase } from '../../application/use-cases/user/create.use-case.js';
 import { UpdateUserUseCase } from '../../application/use-cases/user/update.use-case.js';
 import { DeleteUserUseCase } from '../../application/use-cases/user/delete.use-case.js';
@@ -33,6 +37,7 @@ const userController = new UserController(
     getAllUsersUseCase
 );
 
+// Routes
 router.post('/', userController.create);
 router.get('/', userController.getAll);
 router.get('/id/:id', userController.getById);

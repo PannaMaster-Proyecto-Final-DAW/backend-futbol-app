@@ -15,7 +15,7 @@ import { idGenerator, countryRepository } from "../container.js";
 
 const router = Router();
 
-// Dependency Injection (Manual)
+// Dependency Injection
 const createCountryUseCase = new CreateCountryUseCase(countryRepository, idGenerator);
 const getAllCountryUseCase = new GetAllCountryUseCase(countryRepository);
 const getCountryByIdUseCase = new GetCountryByIdUseCase(countryRepository);

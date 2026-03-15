@@ -126,7 +126,7 @@ export class LeagueController {
                 res.status(400).json({ error: 'Invalid ID' });
                 return;
             }
-            const league = await this.updateLeagueUseCase.execute({ id, name, country, category });
+            const league = await this.updateLeagueUseCase.execute({ id, name, countryId: country, category });
             res.status(200).json(league);
         } catch (error: any) {
             res.status(400).json({ error: error.message });

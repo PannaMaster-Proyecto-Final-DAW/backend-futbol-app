@@ -18,7 +18,7 @@ const router = Router();
 
 // Dependency Injection (Manual)
 const createTeamUseCase = new CreateTeamUseCase(teamRepository, leagueRepository, idGenerator);
-const updateTeamUseCase = new UpdateTeamUseCase(teamRepository);
+const updateTeamUseCase = new UpdateTeamUseCase(teamRepository, leagueRepository);
 const deleteTeamUseCase = new DeleteTeamUseCase(teamRepository);
 const getAllTeamUseCase = new GetAllTeamUseCase(teamRepository);
 const getTeamByIdUseCase = new GetTeamByIdUseCase(teamRepository);

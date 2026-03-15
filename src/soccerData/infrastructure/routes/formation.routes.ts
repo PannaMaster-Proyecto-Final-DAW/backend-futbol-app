@@ -15,7 +15,7 @@ import { idGenerator, formationRepository } from "../container.js";
 
 const router = Router();
 
-// Dependency Injection (Manual)
+// Dependency Injection
 const createFormationUseCase = new CreateFormationUseCase(formationRepository, idGenerator);
 const getAllFormationsUseCase = new GetAllFormationsUseCase(formationRepository);
 const getFormationByIdUseCase = new GetFormationByIdUseCase(formationRepository);

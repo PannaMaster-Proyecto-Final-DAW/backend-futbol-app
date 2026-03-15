@@ -1,5 +1,9 @@
+// Express
 import { Router } from 'express';
+
+// Controller
 import { UserLeagueController } from '../controllers/user-league.controller.js';
+// Use Cases
 import { CreateUserLeagueUseCase } from '../../application/use-cases/user-league/create.use-case.js';
 import { UpdateUserLeagueUseCase } from '../../application/use-cases/user-league/update.use-case.js';
 import { DeleteUserLeagueUseCase } from '../../application/use-cases/user-league/delete.use-case.js';
@@ -27,6 +31,7 @@ const userLeagueController = new UserLeagueController(
     getAllUserLeaguesUseCase
 );
 
+// Routes
 router.post('/', userLeagueController.create);
 router.get('/', userLeagueController.getAll);
 router.get('/id/:id', userLeagueController.getById);
