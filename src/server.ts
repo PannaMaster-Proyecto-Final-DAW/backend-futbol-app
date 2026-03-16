@@ -1,11 +1,12 @@
 import 'reflect-metadata'; // @QUESTION
 import express from 'express';
 import dotenv from 'dotenv';
+import { connectDB } from './infrastructure/config/postgres.config.js';
 
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT;
 
 // Middlewares
 app.use(express.json());
@@ -40,6 +41,6 @@ app.get('/', (req, res) => {
 });
 
 app.listen(PORT, async () => {
-    // await connectDB(); // TODO: Uncomment when database config is ready
+    await connectDB();
     console.log(`Server running on port ${PORT}`);
 });

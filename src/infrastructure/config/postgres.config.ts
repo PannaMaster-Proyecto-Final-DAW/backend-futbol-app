@@ -2,6 +2,7 @@ import { Sequelize } from 'sequelize-typescript';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import dotenv from 'dotenv';
+import { UserModel } from '../models/user.model.js';
 
 dotenv.config();
 
@@ -15,7 +16,7 @@ const sequelize = new Sequelize({
     host: process.env.DB_HOST,
     port: Number(process.env.DB_PORT),
     dialect: 'postgres',
-    models: [path.join(__dirname, '..', 'models')],
+    models: [UserModel],
     logging: false,
 });
 
