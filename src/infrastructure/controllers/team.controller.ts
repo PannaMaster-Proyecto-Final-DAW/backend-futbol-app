@@ -29,7 +29,7 @@ export class TeamController {
     async create(req: Request, res: Response): Promise<void> {
         try {
             const { name, leagueId, league } = req.body;
-            
+
             // Extract leagueId robustly
             const finalLeagueId = leagueId || (league && league.id);
 
@@ -48,13 +48,13 @@ export class TeamController {
         try {
             const id = req.params.id as string;
             const { name, leagueId, league } = req.body;
-            
+
             const finalLeagueId = leagueId || (league && league.id);
 
-            const team = await this.updateTeamUseCase.execute({ 
-                id, 
-                name, 
-                leagueId: finalLeagueId 
+            const team = await this.updateTeamUseCase.execute({
+                id,
+                name,
+                leagueId: finalLeagueId
             });
             if (!team) {
                 res.status(404).json({ error: "Team not found" });

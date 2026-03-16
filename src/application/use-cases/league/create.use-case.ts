@@ -53,9 +53,9 @@ export class CreateLeagueUseCase {
         // Note: If League is a class, use: const newLeague = new League(newId, input.name, country, input.category);
         // Let's use the constructor as seen in the original file
         const leagueInstance = new (await import("../../../domain/entities/league.entity.js")).League(
-            newId, 
-            input.name, 
-            country, 
+            newId,
+            input.name,
+            country,
             input.category
         );
 
