@@ -17,14 +17,14 @@ import { countryRepository, idGenerator, leagueRepository } from "../container.j
 
 const router = Router();
 
-// Dependency Injection (Manual)
+// Dependency Injection
 const createLeagueUseCase = new CreateLeagueUseCase(leagueRepository, countryRepository, idGenerator);
 const getAllLeagueUseCase = new GetAllLeagueUseCase(leagueRepository);
 const getLeagueByIdUseCase = new GetLeagueByIdUseCase(leagueRepository);
 const getLeagueByNameUseCase = new GetLeagueByNameUseCase(leagueRepository);
 const getLeagueByCountryUseCase = new GetLeagueByCountryUseCase(leagueRepository);
 const getLeagueByCategoryUseCase = new GetLeagueByCategoryUseCase(leagueRepository);
-const updateLeagueUseCase = new UpdateLeagueUseCase(leagueRepository);
+const updateLeagueUseCase = new UpdateLeagueUseCase(leagueRepository, countryRepository);
 const deleteLeagueUseCase = new DeleteLeagueUseCase(leagueRepository);
 
 const leagueController = new LeagueController(

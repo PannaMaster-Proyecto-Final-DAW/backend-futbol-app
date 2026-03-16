@@ -14,6 +14,7 @@ app.use(express.json());
 // Game Logic
 import { userRouter } from './gameLogic/infrastructure/routes/user.routes.js';
 import { userLeagueRouter } from './gameLogic/infrastructure/routes/user-league.routes.js';
+import { userLeagueMembershipRouter } from './gameLogic/infrastructure/routes/user-league-membership.routes.js';
 
 // Soccer Data
 import { countryRouter } from "./soccerData/infrastructure/routes/country.routes.js";
@@ -25,6 +26,7 @@ import { playerRouter } from "./soccerData/infrastructure/routes/player.routes.j
 // Game Logic Endpoints
 app.use('/api/user', userRouter);
 app.use('/api/user-league', userLeagueRouter);
+app.use('/api/user-league-membership', userLeagueMembershipRouter);
 
 // Soccer Data Endpoints
 app.use("/api/countries", countryRouter);

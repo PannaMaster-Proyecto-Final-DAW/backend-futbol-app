@@ -1,5 +1,5 @@
 import type { User } from "./user.entity.js";
-import type { UserLeague } from "./userLeague.entity.js";
+import type { UserLeague } from "./user-league.entity.js";
 
 export class UserLeagueMembership {
     constructor(
