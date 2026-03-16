@@ -1,4 +1,5 @@
 import { UserLeague } from "../../domain/entities/user-league.entity.js";
+import { UserLeagueMembership } from "../../domain/entities/user-league-membership.entity.js";
 import { UserLeagueRepository } from "../../domain/repositories/user-league.domain.repository.js";
 
 export class InMemoryUserLeagueRepository implements UserLeagueRepository {
@@ -38,4 +39,13 @@ export class InMemoryUserLeagueRepository implements UserLeagueRepository {
     async getAll(): Promise<UserLeague[]> {
         return this.userLeagues;
     }
+
+    async getLeagueMembers(leagueId: string): Promise<UserLeagueMembership[]> {
+        const league = this.userLeagues.find(ul => ul.id === leagueId);
+        if (!league) {
+            throw new Error('League not found');
+        }
+        return league.members;
+    }
 }
+
