@@ -30,11 +30,11 @@ app.use('/api/user-league', userLeagueRouter);
 app.use('/api/user-league-membership', userLeagueMembershipRouter);
 
 // Soccer Data Endpoints
-app.use("/api/countries", countryRouter);
-app.use("/api/formations", formationRouter);
-app.use("/api/leagues", leagueRouter);
-app.use("/api/teams", teamRouter);
-app.use("/api/players", playerRouter);
+app.use("/api/country", countryRouter);
+app.use("/api/formation", formationRouter);
+app.use("/api/league", leagueRouter);
+app.use("/api/team", teamRouter);
+app.use("/api/player", playerRouter);
 
 app.get('/', (req, res) => {
     res.send('Server is running correctly! 🚀');
