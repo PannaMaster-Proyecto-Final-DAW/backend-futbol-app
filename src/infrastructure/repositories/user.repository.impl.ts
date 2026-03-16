@@ -1,6 +1,6 @@
 import { User, UserRole } from '../../domain/entities/user.entity.js';
 import type { UserRepository } from '../../domain/repositories/user.domain.repositoy.js';
-import { UserModel } from '../../../infrastructure/models/user.model.js';
+import { UserModel } from '../models/user.model.js';
 
 export class UserRepositoryImpl implements UserRepository {
     /**

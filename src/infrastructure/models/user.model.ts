@@ -1,5 +1,5 @@
 import { Table, Column, Model, DataType, PrimaryKey, Default } from 'sequelize-typescript';
-import { UserRole } from '../../gameLogic/domain/entities/user.entity.js';
+import { UserRole } from '../../domain/entities/user.entity.js';
 
 @Table({
   tableName: 'users',

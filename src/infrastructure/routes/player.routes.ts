@@ -14,20 +14,20 @@ import { GetPlayerByNameUseCase } from "../../application/use-cases/player/get-b
 import { SearchPlayersUseCase } from "../../application/use-cases/player/search-players.use-case.js";
 
 // Infrastructure
-import { 
-    idGenerator, 
-    playerRepository, 
-    teamRepository, 
-    countryRepository 
+import {
+    idGenerator,
+    playerRepository,
+    teamRepository,
+    countryRepository
 } from "../container.js";
 
 const router = Router();
 
 // Dependency Injection (Manual)
 const createPlayerUseCase = new CreatePlayerUseCase(
-    playerRepository, 
-    teamRepository, 
-    countryRepository, 
+    playerRepository,
+    teamRepository,
+    countryRepository,
     idGenerator
 );
 const updatePlayerUseCase = new UpdatePlayerUseCase(
