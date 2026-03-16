@@ -1,4 +1,4 @@
-import { UserLeague } from "../entities/userLeague.entity.js";
+import { UserLeague } from "../entities/user-league.entity.js";
 
 export interface UserLeagueRepository {
     // CRUD operations

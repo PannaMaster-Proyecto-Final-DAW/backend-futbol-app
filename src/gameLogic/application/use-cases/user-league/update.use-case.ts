@@ -1,4 +1,4 @@
-import { UserLeague } from "../../../domain/entities/userLeague.entity.js";
+import { UserLeague } from "../../../domain/entities/user-league.entity.js";
 import { UserLeagueRepository } from "../../../domain/repositories/user-league.domain.repository.js";
 
 export interface UpdateLeagueInput {
