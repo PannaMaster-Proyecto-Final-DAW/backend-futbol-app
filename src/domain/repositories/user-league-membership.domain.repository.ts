@@ -11,4 +11,7 @@ export interface UserLeagueMembershipRepository {
     getByUserIdAndLeagueId(userId: string, leagueId: string): Promise<UserLeagueMembership | null>;
     getByUserId(userId: string): Promise<UserLeagueMembership[]>;
     getByLeagueId(leagueId: string): Promise<UserLeagueMembership[]>;
+
+    // Other methods
+    incrementScore(userId: string, leagueId: string, score: number): Promise<UserLeagueMembership>;
 }

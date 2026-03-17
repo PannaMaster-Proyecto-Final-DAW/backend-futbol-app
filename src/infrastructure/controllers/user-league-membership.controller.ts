@@ -6,6 +6,7 @@ import { GetUserLeagueMembershipByIdUseCase } from '../../application/use-cases/
 import { GetMembershipByUserAndLeagueUseCase } from '../../application/use-cases/user-league-membership/get-by-user-and-league.use-case.js';
 import { GetMembershipsByUserUseCase } from '../../application/use-cases/user-league-membership/get-by-user.use-case.js';
 import { GetMembershipsByLeagueUseCase } from '../../application/use-cases/user-league-membership/get-by-league.use-case.js';
+import { IncrementScoreUseCase } from '../../application/use-cases/user-league-membership/increment-score.use-case.js';
 
 export class UserLeagueMembershipController {
     constructor(
@@ -15,7 +16,8 @@ export class UserLeagueMembershipController {
         private readonly getByIdUseCase: GetUserLeagueMembershipByIdUseCase,
         private readonly getByUserAndLeagueUseCase: GetMembershipByUserAndLeagueUseCase,
         private readonly getByUserUseCase: GetMembershipsByUserUseCase,
-        private readonly getByLeagueUseCase: GetMembershipsByLeagueUseCase
+        private readonly getByLeagueUseCase: GetMembershipsByLeagueUseCase,
+        private readonly incrementScoreUseCase: IncrementScoreUseCase
     ) {
         this.create = this.create.bind(this);
         this.update = this.update.bind(this);
@@ -24,6 +26,7 @@ export class UserLeagueMembershipController {
         this.getByUserAndLeague = this.getByUserAndLeague.bind(this);
         this.getByUser = this.getByUser.bind(this);
         this.getByLeague = this.getByLeague.bind(this);
+        this.incrementScore = this.incrementScore.bind(this);
     }
 
     // Create a new membership
@@ -162,6 +165,33 @@ export class UserLeagueMembershipController {
             res.status(200).json({ message: 'Membership deleted successfully' });
         } catch (error: any) {
             console.error(error);
+            res.status(500).json({ error: 'Internal Server Error' });
+        }
+    }
+
+    // Increment score
+    async incrementScore(req: Request, res: Response) {
+        try {
+            const { id } = req.params;
+            const { pointsToAdd } = req.body;
+
+            if (!id || pointsToAdd === undefined || typeof pointsToAdd !== 'number') {
+                res.status(400).json({ error: 'ID in path and pointsToAdd (number) in body are required' });
+                return;
+            }
+
+            const membership = await this.incrementScoreUseCase.execute({ membershipId: id as string, pointsToAdd });
+            res.status(200).json(membership);
+        } catch (error: any) {
+            console.error(error);
+            if (error.message === 'Points to add must be greater than 0') {
+                res.status(400).json({ error: error.message });
+                return;
+            }
+            if (error.message.includes('Membership not found')) {
+                res.status(404).json({ error: error.message });
+                return;
+            }
             res.status(500).json({ error: 'Internal Server Error' });
         }
     }

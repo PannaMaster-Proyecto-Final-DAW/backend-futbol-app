@@ -11,6 +11,7 @@ import { GetUserLeagueMembershipByIdUseCase } from '../../application/use-cases/
 import { GetMembershipByUserAndLeagueUseCase } from '../../application/use-cases/user-league-membership/get-by-user-and-league.use-case.js';
 import { GetMembershipsByUserUseCase } from '../../application/use-cases/user-league-membership/get-by-user.use-case.js';
 import { GetMembershipsByLeagueUseCase } from '../../application/use-cases/user-league-membership/get-by-league.use-case.js';
+import { IncrementScoreUseCase } from '../../application/use-cases/user-league-membership/increment-score.use-case.js';
 import { userLeagueMembershipRepository, userRepository, userLeagueRepository, idGenerator } from '../container.js';
 
 const router = Router();
@@ -23,6 +24,7 @@ const getByIdUseCase = new GetUserLeagueMembershipByIdUseCase(userLeagueMembersh
 const getByUserAndLeagueUseCase = new GetMembershipByUserAndLeagueUseCase(userLeagueMembershipRepository);
 const getByUserUseCase = new GetMembershipsByUserUseCase(userLeagueMembershipRepository);
 const getByLeagueUseCase = new GetMembershipsByLeagueUseCase(userLeagueMembershipRepository);
+const incrementScoreUseCase = new IncrementScoreUseCase(userLeagueMembershipRepository);
 
 const controller = new UserLeagueMembershipController(
     createUseCase,
@@ -31,7 +33,8 @@ const controller = new UserLeagueMembershipController(
     getByIdUseCase,
     getByUserAndLeagueUseCase,
     getByUserUseCase,
-    getByLeagueUseCase
+    getByLeagueUseCase,
+    incrementScoreUseCase
 );
 
 // Routes
@@ -40,6 +43,7 @@ router.get('/id/:id', controller.getById);
 router.get('/user/:userId/league/:leagueId', controller.getByUserAndLeague);
 router.get('/user/:userId', controller.getByUser);
 router.get('/league/:leagueId', controller.getByLeague);
+router.patch('/increment-score/:id', controller.incrementScore);
 router.patch('/:id', controller.update);
 router.delete('/:id', controller.delete);
 

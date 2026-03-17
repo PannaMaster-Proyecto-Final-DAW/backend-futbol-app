@@ -46,4 +46,14 @@ export class InMemoryUserLeagueMembershipRepository implements UserLeagueMembers
     async getByLeagueId(leagueId: string): Promise<UserLeagueMembership[]> {
         return this.memberships.filter(m => m.league.id === leagueId);
     }
+
+    // Increment score
+    async incrementScore(userId: string, leagueId: string, score: number): Promise<UserLeagueMembership> {
+        const membership = await this.getByUserIdAndLeagueId(userId, leagueId);
+        if (!membership) {
+            throw new Error(`Membership not found for user ${userId} and league ${leagueId}`);
+        }
+        membership.score += score;
+        return membership;
+    }
 }
