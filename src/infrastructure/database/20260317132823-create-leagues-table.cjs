@@ -17,6 +17,12 @@ module.exports = {
       countryId: {
         type: Sequelize.UUID,
         allowNull: false,
+        references: {
+          model: 'countries',
+          key: 'id',
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE',
       },
       category: {
         type: Sequelize.ENUM('male', 'female'),

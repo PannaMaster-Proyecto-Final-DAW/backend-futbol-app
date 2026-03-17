@@ -1,4 +1,5 @@
-import { Table, Column, Model, DataType, PrimaryKey, Default } from 'sequelize-typescript';
+import { Table, Column, Model, DataType, PrimaryKey, Default, ForeignKey, BelongsTo } from 'sequelize-typescript';
+import { CountryModel } from './country.model.js';
 import { LeagueCategory } from '../../domain/entities/league.entity.js';
 
 @Table({
@@ -17,11 +18,15 @@ export class LeagueModel extends Model {
   })
   declare name: string;
 
+  @ForeignKey(() => CountryModel)
   @Column({
     type: DataType.UUID,
     allowNull: false,
   })
-  declare countryId: string; // Holding the ID instead of the full object, as discussed in refactoring
+  declare countryId: string;
+
+  @BelongsTo(() => CountryModel)
+  declare country: CountryModel;
 
   @Column({
     type: DataType.ENUM(...Object.values(LeagueCategory)),

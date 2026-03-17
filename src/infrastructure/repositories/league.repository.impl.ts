@@ -96,10 +96,10 @@ export class LeagueRepositoryImpl implements LeagueRepository {
     private toEntity(model: LeagueModel): League {
         if (!model) throw new Error('League model is null');
         
-        // Since we are keeping it simple without formal Country association in the model,
-        // we reconstruct the Country entity with just the ID and an empty name for now.
-        // This maintains compatibility with the League entity constructor.
-        const country = new Country(model.countryId, ''); 
+        // If the country association is loaded, use it; otherwise, use the ID.
+        const country = model.country 
+            ? new Country(model.country.id, model.country.name)
+            : new Country(model.countryId, ''); 
 
         return new League(
             model.id,
