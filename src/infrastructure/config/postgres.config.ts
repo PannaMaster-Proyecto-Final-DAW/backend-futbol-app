@@ -19,6 +19,12 @@ const sequelize = new Sequelize({
     dialect: 'postgres',
     models: [UserModel, LeagueModel],
     logging: false,
+    dialectOptions: {
+        ssl: {
+            require: true,
+            rejectUnauthorized: false,
+        },
+    },
 });
 
 export const connectDB = async () => {
