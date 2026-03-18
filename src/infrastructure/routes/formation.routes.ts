@@ -35,7 +35,7 @@ const formationController = new FormationController(
 // Routes
 router.post("/", formationController.create);
 router.get("/", formationController.getAll);
-router.get("/:id", formationController.getById);
+router.get("/id/:id", formationController.getById);
 router.get("/name/:name", formationController.getByName);
 router.patch("/:id", formationController.update);
 router.delete("/:id", formationController.delete);

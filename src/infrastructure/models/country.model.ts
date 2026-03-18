@@ -1,5 +1,4 @@
-import { Table, Column, Model, DataType, PrimaryKey, Default, HasMany } from 'sequelize-typescript';
-import { LeagueModel } from './league.model.js';
+import { Table, Column, Model, DataType, PrimaryKey, Default } from 'sequelize-typescript';
 
 @Table({
   tableName: 'countries',
@@ -14,11 +13,9 @@ export class CountryModel extends Model {
   @Column({
     type: DataType.STRING,
     allowNull: false,
+    unique: true,
   })
   declare name: string;
-
-  @HasMany(() => LeagueModel)
-  declare leagues: LeagueModel[];
 }
 
 export default CountryModel;

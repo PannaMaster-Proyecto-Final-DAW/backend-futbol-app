@@ -11,13 +11,13 @@ export class InMemoryCountryRepository implements CountryRepository {
     }
 
     // Update a country
-    async update(id: string, country: Country): Promise<Country | null> {
-        const index = this.countries.findIndex(c => c.id === id);
+    async update(country: Country): Promise<Country> {
+        const index = this.countries.findIndex(c => c.id === country.id);
         if (index !== -1) {
             this.countries[index] = country;
             return country;
         }
-        throw new Error(`Country with id ${id} not found`);
+        throw new Error(`Country with id ${country.id} not found`);
     }
 
     // Delete a country

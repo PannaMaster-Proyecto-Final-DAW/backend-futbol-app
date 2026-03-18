@@ -35,7 +35,7 @@ const countryController = new CountryController(
 // Routes
 router.post("/", countryController.create);
 router.get("/", countryController.getAll);
-router.get("/:id", countryController.getById);
+router.get("/id/:id", countryController.getById);
 router.get("/name/:name", countryController.getByName);
 router.patch("/:id", countryController.update);
 router.delete("/:id", countryController.delete);
