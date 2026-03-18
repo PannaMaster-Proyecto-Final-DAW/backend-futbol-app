@@ -3,6 +3,8 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import dotenv from 'dotenv';
 import { UserModel } from '../models/user.model.js';
+import { LeagueModel } from '../models/league.model.js';
+import { CountryModel } from '../models/country.model.js';
 
 dotenv.config();
 
@@ -16,17 +18,24 @@ const sequelize = new Sequelize({
     host: process.env.DB_HOST,
     port: Number(process.env.DB_PORT),
     dialect: 'postgres',
-    models: [UserModel],
+    models: [UserModel, LeagueModel, CountryModel],
     logging: false,
+    dialectOptions: {
+        ssl: {
+            require: true,
+            rejectUnauthorized: false,
+        },
+    },
 });
 
 export const connectDB = async () => {
     try {
         await sequelize.authenticate();
-        console.log('Database connected successfully 🚀');
+        console.log('Database connected successfully');
     } catch (error) {
         console.error('Unable to connect to the database:', error);
     }
 };
 
 export default sequelize;
+
