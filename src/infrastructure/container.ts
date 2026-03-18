@@ -9,16 +9,27 @@
 //                                 IMPORTS
 // ============================================================================
 
-// --- Repositories ---
+// --- InMemory Repositories ---
 import { InMemoryCountryRepository } from "./repositories/in-memory-country.repository.js";
 import { InMemoryFormationRepository } from "./repositories/in-memory-formation.js";
 import { InMemoryLeagueRepository } from "./repositories/in-memory-league.repository.js";
 import { InMemoryTeamRepository } from "./repositories/in-memory-team.repository.js";
 import { InMemoryPlayerRepository } from "./repositories/in-memory-player.repository.js";
 
-import { UserRepositoryImpl } from './repositories/user.repository.impl.js';
+import { InMemoryUserRepository } from './repositories/in-memory-user.repository.js';
 import { InMemoryUserLeagueRepository } from './repositories/in-memory-user-league.repository.js';
 import { InMemoryUserLeagueMembershipRepository } from './repositories/in-memory-user-league-membership.repository.js';
+
+// --- SQL Repositories ---
+import { CountryRepositoryImpl } from "./repositories/country.repository.impl.js";
+import { FormationRepositoryImpl } from "./repositories/formation.repository.impl.js";
+import { LeagueRepositoryImpl } from "./repositories/league.repository.impl.js";
+import { TeamRepositoryImpl } from "./repositories/team.repository.impl.js";
+// import { PlayerRepositoryImpl } from "./repositories/player.repository.impl.js";
+
+import { UserRepositoryImpl } from './repositories/user.repository.impl.js';
+import { UserLeagueRepositoryImpl } from "./repositories/user-league.repository.impl.js";
+import { UserLeagueMembershipRepositoryImpl } from "./repositories/user-league-membership.repository.impl.js";
 
 // --- Services ---
 import { BcryptPasswordHasher } from './services/bcrypt-password.hasher.js';
@@ -30,15 +41,15 @@ import { UuidInviteCodeGenerator } from './services/invite-code.generator.js';
 // ============================================================================
 
 // --- Repository Instances ---
-const countryRepository = new InMemoryCountryRepository();
-const formationRepository = new InMemoryFormationRepository();
-const leagueRepository = new InMemoryLeagueRepository();
-const teamRepository = new InMemoryTeamRepository();
+const countryRepository = new CountryRepositoryImpl();
+const formationRepository = new FormationRepositoryImpl();
+const leagueRepository = new LeagueRepositoryImpl();
+const teamRepository = new TeamRepositoryImpl();
 const playerRepository = new InMemoryPlayerRepository();
 
 const userRepository = new UserRepositoryImpl();
-const userLeagueRepository = new InMemoryUserLeagueRepository();
-const userLeagueMembershipRepository = new InMemoryUserLeagueMembershipRepository();
+const userLeagueRepository = new UserLeagueRepositoryImpl();
+const userLeagueMembershipRepository = new UserLeagueMembershipRepositoryImpl();
 
 // --- Service Instances ---
 const passwordHasher = new BcryptPasswordHasher();
