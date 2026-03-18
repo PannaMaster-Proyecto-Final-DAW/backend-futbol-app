@@ -32,11 +32,6 @@ export class UpdateCountryUseCase {
         // Update fields if they are present in the Input
         if (input.name !== undefined) country.name = input.name;
 
-        const updatedCountry = await this.countryRepository.update(input.id, country);
-        if (!updatedCountry) {
-            throw new Error(`Country with id ${input.id} could not be updated`);
-        }
-
-        return updatedCountry;
+        return await this.countryRepository.update(country);
     }
 }
