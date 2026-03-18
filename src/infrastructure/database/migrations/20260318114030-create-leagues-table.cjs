@@ -41,7 +41,5 @@ module.exports = {
 
   async down(queryInterface, Sequelize) {
     await queryInterface.dropTable('leagues');
-    // Note: We might want to drop the ENUM type as well if Postgres doesn't do it automatically,
-    // but usually in migrations it's handled or left if shared.
   }
 };
