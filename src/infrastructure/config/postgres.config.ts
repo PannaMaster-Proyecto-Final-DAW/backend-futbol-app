@@ -7,6 +7,7 @@ import { LeagueModel } from '../models/league.model.js';
 import { CountryModel } from '../models/country.model.js';
 import { TeamModel } from '../models/team.model.js';
 import { UserLeagueModel } from '../models/user-league.model.js';
+import { UserLeagueMembershipModel } from '../models/user-league-membership.model.js';
 
 dotenv.config();
 
@@ -20,7 +21,7 @@ const sequelize = new Sequelize({
     host: process.env.DB_HOST,
     port: Number(process.env.DB_PORT),
     dialect: 'postgres',
-    models: [UserModel, LeagueModel, CountryModel, TeamModel, UserLeagueModel],
+    models: [UserModel, LeagueModel, CountryModel, TeamModel, UserLeagueModel, UserLeagueMembershipModel],
     logging: false,
     dialectOptions: {
         ssl: {
