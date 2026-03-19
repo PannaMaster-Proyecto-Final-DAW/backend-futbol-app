@@ -8,6 +8,7 @@ export interface UpdatePlayerInput {
     position?: PlayerPosition[];
     teamId?: string;
     countryId?: string;
+    pictureUrl?: string;
 }
 
 /**
@@ -40,6 +41,7 @@ export class UpdatePlayerUseCase {
         // We use strict check ( !== undefined ) to allow updates to falsy values
         if (input.name !== undefined) player.name = input.name;
         if (input.position !== undefined) player.position = input.position;
+        if (input.pictureUrl !== undefined) player.pictureUrl = input.pictureUrl;
 
         if (input.teamId !== undefined) {
             const team = await this.teamRepository.getById(input.teamId);

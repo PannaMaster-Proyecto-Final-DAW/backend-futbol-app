@@ -8,6 +8,7 @@ export interface UpdateTeamInput {
     id: string;
     name?: string;
     leagueId?: string;
+    pictureUrl?: string;
 }
 
 /**
@@ -43,7 +44,8 @@ export class UpdateTeamUseCase {
         const updatedTeam = new TeamEntity(
             existingTeam.id,
             input.name ?? existingTeam.name,
-            league
+            league,
+            input.pictureUrl ?? existingTeam.pictureUrl
         );
 
         // 4. Save changes

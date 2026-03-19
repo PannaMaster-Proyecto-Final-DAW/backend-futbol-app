@@ -25,7 +25,7 @@ import { CountryRepositoryImpl } from "./repositories/country.repository.impl.js
 import { FormationRepositoryImpl } from "./repositories/formation.repository.impl.js";
 import { LeagueRepositoryImpl } from "./repositories/league.repository.impl.js";
 import { TeamRepositoryImpl } from "./repositories/team.repository.impl.js";
-// import { PlayerRepositoryImpl } from "./repositories/player.repository.impl.js";
+import { PlayerRepositoryImpl } from "./repositories/player.repository.impl.js";
 
 import { UserRepositoryImpl } from './repositories/user.repository.impl.js';
 import { UserLeagueRepositoryImpl } from "./repositories/user-league.repository.impl.js";
@@ -45,7 +45,7 @@ const countryRepository = new CountryRepositoryImpl();
 const formationRepository = new FormationRepositoryImpl();
 const leagueRepository = new LeagueRepositoryImpl();
 const teamRepository = new TeamRepositoryImpl();
-const playerRepository = new InMemoryPlayerRepository();
+const playerRepository = new PlayerRepositoryImpl();
 
 const userRepository = new UserRepositoryImpl();
 const userLeagueRepository = new UserLeagueRepositoryImpl();
