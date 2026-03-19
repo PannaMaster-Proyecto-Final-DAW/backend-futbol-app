@@ -9,6 +9,7 @@ import type { Country } from "../../../domain/entities/country.entity.js";
 export interface UpdateCountryInput {
     id: string;
     name?: string; // @QUESTION
+    pictureUrl?: string;
 }
 
 // Use Case to update an existing country.
@@ -31,6 +32,7 @@ export class UpdateCountryUseCase {
 
         // Update fields if they are present in the Input
         if (input.name !== undefined) country.name = input.name;
+        if (input.pictureUrl !== undefined) country.pictureUrl = input.pictureUrl;
 
         return await this.countryRepository.update(country);
     }

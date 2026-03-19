@@ -11,5 +11,6 @@ export class League {
         public name: string,
         public country: Country, // Ref Country
         public category: LeagueCategory,
+        public pictureUrl: string,
     ) { }
 }

@@ -12,6 +12,7 @@ export interface CreateLeagueInput {
     name: string;
     countryId: string;
     category: LeagueCategory;
+    pictureUrl: string;
 }
 
 // Use Case to create a new league
@@ -47,7 +48,8 @@ export class CreateLeagueUseCase {
             id: newId,
             name: input.name,
             country: country,
-            category: input.category
+            category: input.category,
+            pictureUrl: input.pictureUrl
         } as League; // Note: Assuming League can be instantiated this way or has a constructor accepting these
 
         // Note: If League is a class, use: const newLeague = new League(newId, input.name, country, input.category);
@@ -56,7 +58,8 @@ export class CreateLeagueUseCase {
             newId,
             input.name,
             country,
-            input.category
+            input.category,
+            input.pictureUrl
         );
 
         // 4. Saves the league using the repository
