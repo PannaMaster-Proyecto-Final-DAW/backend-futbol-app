@@ -31,6 +31,7 @@ export class Player {
         public position: PlayerPosition[],
         public team: Team, // Ref Team
         public country: Country, // Ref Country
+        public pictureUrl: string,
     ) { }
 }
 

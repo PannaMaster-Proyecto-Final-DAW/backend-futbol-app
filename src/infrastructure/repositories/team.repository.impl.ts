@@ -12,7 +12,8 @@ export class TeamRepositoryImpl implements TeamRepository {
         const newTeam = await TeamModel.create({
             id: team.id,
             name: team.name,
-            leagueId: team.league.id
+            leagueId: team.league.id,
+            pictureUrl: team.pictureUrl
         });
 
         const created = await this.getById(newTeam.id);
@@ -28,6 +29,7 @@ export class TeamRepositoryImpl implements TeamRepository {
 
         if (team.name) updateData.name = team.name;
         if (team.league?.id) updateData.leagueId = team.league.id;
+        if (team.pictureUrl !== undefined) updateData.pictureUrl = team.pictureUrl;
 
         const [affectedCount] = await TeamModel.update(updateData, {
             where: { id: id }
@@ -94,7 +96,8 @@ export class TeamRepositoryImpl implements TeamRepository {
         return new Team(
             model.id,
             model.name,
-            league
+            league,
+            model.pictureUrl
         );
     }
 }

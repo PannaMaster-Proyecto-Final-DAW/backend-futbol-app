@@ -26,6 +26,12 @@ export class TeamModel extends Model {
 
   @BelongsTo(() => LeagueModel)
   declare league: LeagueModel;
+
+  @Column({
+    type: DataType.STRING,
+    allowNull: true,
+  })
+  declare pictureUrl: string;
 }
 
 export default TeamModel;

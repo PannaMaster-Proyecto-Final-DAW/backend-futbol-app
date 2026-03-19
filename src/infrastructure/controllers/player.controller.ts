@@ -30,12 +30,13 @@ export class PlayerController {
     // Create a new player
     async create(req: Request, res: Response): Promise<void> {
         try {
-            const { name, position, teamId, countryId } = req.body;
+            const { name, position, teamId, countryId, pictureUrl } = req.body;
             const player = await this.createPlayerUseCase.execute({
                 name,
                 position,
                 teamId,
-                countryId
+                countryId,
+                pictureUrl
             });
             res.status(201).json(player);
         } catch (error: any) {
@@ -47,12 +48,13 @@ export class PlayerController {
     async update(req: Request, res: Response): Promise<void> {
         try {
             const id = req.params.id as string;
-            const { name, position, teamId, countryId } = req.body;
+            const { name, position, teamId, countryId, pictureUrl } = req.body;
             const player = await this.updatePlayerUseCase.execute(id, {
                 name,
                 position,
                 teamId,
-                countryId
+                countryId,
+                pictureUrl
             });
             res.status(200).json(player);
         } catch (error: any) {
