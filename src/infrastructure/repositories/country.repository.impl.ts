@@ -11,7 +11,8 @@ export class CountryRepositoryImpl implements CountryRepository {
     async create(country: Country): Promise<Country> {
         const newCountry = await CountryModel.create({
             id: country.id,
-            name: country.name
+            name: country.name,
+            pictureUrl: country.pictureUrl
         });
 
         const created = await this.getById(newCountry.id);
@@ -28,6 +29,7 @@ export class CountryRepositoryImpl implements CountryRepository {
 
         //Verify which fields are going to be updated
         if (country.name) updateData.name = country.name;
+        if (country.pictureUrl !== undefined) updateData.pictureUrl = country.pictureUrl;
 
         // affectedCount is the number of rows affected by the update
         const [affectedCount] = await CountryModel.update(updateData, {
@@ -85,7 +87,8 @@ export class CountryRepositoryImpl implements CountryRepository {
         if (!model) throw new Error('Country model is null');
         return new Country(
             model.id,
-            model.name
+            model.name,
+            model.pictureUrl
         );
     }
 }

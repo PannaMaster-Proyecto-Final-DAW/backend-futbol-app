@@ -33,6 +33,12 @@ export class LeagueModel extends Model {
     allowNull: false,
   })
   declare category: LeagueCategory;
+
+  @Column({
+    type: DataType.TEXT,
+    allowNull: true,
+  })
+  declare pictureUrl: string;
 }
 
 export default LeagueModel;

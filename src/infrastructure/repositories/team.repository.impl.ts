@@ -88,8 +88,8 @@ export class TeamRepositoryImpl implements TeamRepository {
         
         // If the league association is loaded, use it; otherwise, use the ID.
         const league = model.league 
-            ? new League(model.league.id, model.league.name, null as any, null as any)
-            : new League(model.leagueId, '', null as any, null as any);
+            ? new League(model.league.id, model.league.name, null as any, null as any, model.league.pictureUrl)
+            : new League(model.leagueId, '', null as any, null as any, '');
 
         return new Team(
             model.id,

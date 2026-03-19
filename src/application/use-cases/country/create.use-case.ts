@@ -9,6 +9,7 @@ export interface IdGenerator {
 // Input for Country creation
 export interface CreateCountryInput {
     name: string;
+    pictureUrl: string;
 }
 
 // Use Case to create a new country
@@ -29,7 +30,7 @@ export class CreateCountryUseCase {
         const id = this.idGenerator.generate();
 
         // 2. Creates the country entity
-        const country = new Country(id, input.name);
+        const country = new Country(id, input.name, input.pictureUrl);
 
         // 3. Saves the country using the repository
         return this.countryRepository.create(country);

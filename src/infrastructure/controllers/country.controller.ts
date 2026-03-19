@@ -35,9 +35,9 @@ export class CountryController {
     // Create a new country
     async create(req: Request, res: Response): Promise<void> {
         try {
-            const { name } = req.body;
+            const { name, pictureUrl } = req.body;
 
-            const country = await this.createCountryUseCase.execute({ name });
+            const country = await this.createCountryUseCase.execute({ name, pictureUrl });
 
             res.status(201).json(country);
 
@@ -91,12 +91,12 @@ export class CountryController {
     async update(req: Request, res: Response): Promise<void> {
         try {
             const { id } = req.params;
-            const { name } = req.body;
+            const { name, pictureUrl } = req.body;
             if (!id || typeof id !== 'string') {
                 res.status(400).json({ error: 'Invalid ID' });
                 return;
             }
-            const country = await this.updateCountryUseCase.execute({ id, name });
+            const country = await this.updateCountryUseCase.execute({ id, name, pictureUrl });
             res.status(200).json(country);
         } catch (error: any) {
             res.status(400).json({ error: error.message });

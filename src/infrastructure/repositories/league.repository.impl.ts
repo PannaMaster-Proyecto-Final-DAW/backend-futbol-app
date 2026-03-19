@@ -13,7 +13,8 @@ export class LeagueRepositoryImpl implements LeagueRepository {
             id: league.id,
             name: league.name,
             countryId: league.country.id,
-            category: league.category
+            category: league.category,
+            pictureUrl: league.pictureUrl
         });
 
         const created = await this.getById(newLeague.id);
@@ -30,6 +31,7 @@ export class LeagueRepositoryImpl implements LeagueRepository {
         if (league.name) updateData.name = league.name;
         if (league.country?.id) updateData.countryId = league.country.id;
         if (league.category) updateData.category = league.category;
+        if (league.pictureUrl !== undefined) updateData.pictureUrl = league.pictureUrl;
 
         const [affectedCount] = await LeagueModel.update(updateData, {
             where: { id: id }
@@ -98,14 +100,15 @@ export class LeagueRepositoryImpl implements LeagueRepository {
         
         // If the country association is loaded, use it; otherwise, use the ID.
         const country = model.country 
-            ? new Country(model.country.id, model.country.name)
-            : new Country(model.countryId, ''); 
+            ? new Country(model.country.id, model.country.name, model.country.pictureUrl)
+            : new Country(model.countryId, '', ''); 
 
         return new League(
             model.id,
             model.name,
             country,
-            model.category as LeagueCategory
+            model.category as LeagueCategory,
+            model.pictureUrl
         );
     }
 }

@@ -32,7 +32,7 @@ export class LeagueController {
 
     async create(req: Request, res: Response): Promise<void> {
         try {
-            const { name, countryId, category, country } = req.body;
+            const { name, countryId, category, country, pictureUrl } = req.body;
 
             // To be robust and solve the user's error, we extract countryId from 
             // either countryId OR country.id (common mistake in nested bodies)
@@ -45,7 +45,8 @@ export class LeagueController {
             const league = await this.createLeagueUseCase.execute({
                 name,
                 countryId: finalCountryId,
-                category
+                category,
+                pictureUrl
             });
             res.status(201).json(league);
         } catch (error: any) {
@@ -121,12 +122,12 @@ export class LeagueController {
     async update(req: Request, res: Response): Promise<void> {
         try {
             const { id } = req.params;
-            const { name, country, category } = req.body;
+            const { name, country, category, pictureUrl } = req.body;
             if (!id || typeof id !== 'string') {
                 res.status(400).json({ error: 'Invalid ID' });
                 return;
             }
-            const league = await this.updateLeagueUseCase.execute({ id, name, countryId: country, category });
+            const league = await this.updateLeagueUseCase.execute({ id, name, countryId: country, category, pictureUrl });
             res.status(200).json(league);
         } catch (error: any) {
             res.status(400).json({ error: error.message });

@@ -16,6 +16,12 @@ export class CountryModel extends Model {
     unique: true,
   })
   declare name: string;
+
+  @Column({
+    type: DataType.TEXT,
+    allowNull: true,
+  })
+  declare pictureUrl: string;
 }
 
 export default CountryModel;
