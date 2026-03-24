@@ -39,7 +39,7 @@ export class UpdateUserUseCase {
             user.email = input.email;
         }
         if (input.password !== undefined) {
-            user.password = await this.passwordHasher.hash(input.password);
+            user.password = await this.passwordHasher.hash(input.password); // DONE
         }
         if (input.role !== undefined) {
             user.role = input.role;
