@@ -173,8 +173,8 @@ export class PlayerRepositoryImpl implements PlayerRepository {
             : new Team(model.teamId, '', null as any, '');
 
         const country = model.country 
-            ? new Country(model.country.id, model.country.name)
-            : new Country(model.countryId, '');
+            ? new Country(model.country.id, model.country.name, model.country.pictureUrl)
+            : new Country(model.countryId, '', '');
 
         return new Player(
             model.id,

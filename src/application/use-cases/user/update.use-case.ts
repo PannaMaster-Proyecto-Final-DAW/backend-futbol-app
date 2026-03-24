@@ -1,5 +1,6 @@
 import { User, UserRole } from "../../../domain/entities/user.entity.js";
 import { UserRepository } from "../../../domain/repositories/user.domain.repositoy.js";
+import { PasswordHasher } from "./create.use-case.js";
 
 export interface UpdateInput {
     userName?: string;
@@ -10,7 +11,8 @@ export interface UpdateInput {
 
 export class UpdateUserUseCase {
     constructor(
-        private readonly UserRepository: UserRepository
+        private readonly UserRepository: UserRepository,
+        private readonly passwordHasher: PasswordHasher
     ) { }
 
     /**
@@ -37,7 +39,7 @@ export class UpdateUserUseCase {
             user.email = input.email;
         }
         if (input.password !== undefined) {
-            user.password = input.password;
+            user.password = await this.passwordHasher.hash(input.password); // DONE
         }
         if (input.role !== undefined) {
             user.role = input.role;
