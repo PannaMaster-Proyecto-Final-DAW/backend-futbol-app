@@ -11,4 +11,5 @@ export interface TeamRepository {
     getById(id: string): Promise<Team | null>;
     getByName(name: string): Promise<Team | null>;
     getByLeague(leagueId: string): Promise<Team[]>;
+    getByTier(tier: number): Promise<Team[]>;
 }
