@@ -12,6 +12,7 @@ import { GetAllTeamUseCase } from "../../application/use-cases/team/get-all.use-
 import { GetTeamByIdUseCase } from "../../application/use-cases/team/get-by-id.use-case.js";
 import { GetTeamByNameUseCase } from "../../application/use-cases/team/get-by-name.use-case.js";
 import { GetTeamsByLeagueUseCase } from "../../application/use-cases/team/get-by-league.use-case.js";
+import { GetTeamByTierUseCase } from "../../application/use-cases/team/get-by-tier.use-case.ts";
 import { idGenerator, leagueRepository, teamRepository } from "../container.js";
 
 const router = Router();
@@ -24,6 +25,7 @@ const getAllTeamUseCase = new GetAllTeamUseCase(teamRepository);
 const getTeamByIdUseCase = new GetTeamByIdUseCase(teamRepository);
 const getTeamByNameUseCase = new GetTeamByNameUseCase(teamRepository);
 const getTeamsByLeagueUseCase = new GetTeamsByLeagueUseCase(teamRepository);
+const getTeamByTierUseCase = new GetTeamByTierUseCase(teamRepository);
 
 const teamController = new TeamController(
     createTeamUseCase,
@@ -32,7 +34,8 @@ const teamController = new TeamController(
     getAllTeamUseCase,
     getTeamByIdUseCase,
     getTeamByNameUseCase,
-    getTeamsByLeagueUseCase
+    getTeamsByLeagueUseCase,
+    getTeamByTierUseCase
 );
 
 // Routes
@@ -41,6 +44,7 @@ router.get("/", teamController.getAll);
 router.get("/id/:id", teamController.getById);
 router.get("/name/:name", teamController.getByName);
 router.get("/league/:leagueId", teamController.getByLeague);
+router.get("/tier/:tier", teamController.getByTier);
 router.patch("/:id", teamController.update);
 router.delete("/:id", teamController.delete);
 

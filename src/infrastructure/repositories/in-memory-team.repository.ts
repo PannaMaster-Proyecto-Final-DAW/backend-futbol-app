@@ -49,4 +49,9 @@ export class InMemoryTeamRepository implements TeamRepository {
     async getByLeague(leagueId: string): Promise<Team[]> {
         return this.teams.filter(t => t.league.id === leagueId);
     }
+
+    // Get teams by tier
+    async getByTier(tier: number): Promise<Team[]> {
+        return this.teams.filter(t => t.tier === tier);
+    }
 }

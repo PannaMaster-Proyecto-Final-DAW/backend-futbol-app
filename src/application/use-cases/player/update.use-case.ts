@@ -9,6 +9,7 @@ export interface UpdatePlayerInput {
     teamId?: string;
     countryId?: string;
     pictureUrl?: string;
+    tier?: number;
 }
 
 /**
@@ -42,6 +43,7 @@ export class UpdatePlayerUseCase {
         if (input.name !== undefined) player.name = input.name;
         if (input.position !== undefined) player.position = input.position;
         if (input.pictureUrl !== undefined) player.pictureUrl = input.pictureUrl;
+        if (input.tier !== undefined) player.tier = input.tier;
 
         if (input.teamId !== undefined) {
             const team = await this.teamRepository.getById(input.teamId);

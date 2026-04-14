@@ -32,6 +32,16 @@ export class TeamModel extends Model {
     allowNull: true,
   })
   declare pictureUrl: string;
+
+  @Default(1)
+  @Column({
+    type: DataType.INTEGER,
+    allowNull: false,
+    validate: {
+      isIn: [[1, 2, 3]],
+    },
+  })
+  declare tier: number;
 }
 
 export default TeamModel;

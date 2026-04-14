@@ -73,4 +73,8 @@ export class InMemoryPlayerRepository implements PlayerRepository {
             p.position.includes(position)
         );
     }
+
+    async getByTier(tier: number): Promise<Player[]> {
+        return this.players.filter(p => p.tier === tier);
+    }
 }

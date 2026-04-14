@@ -32,6 +32,7 @@ export class Player {
         public team: Team, // Ref Team
         public country: Country, // Ref Country
         public pictureUrl: string,
+        public tier: number, // 1 = easy, 2 = medium, 3 = hard
     ) { }
 }
 

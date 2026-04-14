@@ -19,7 +19,8 @@ export class PlayerRepositoryImpl implements PlayerRepository {
             position: player.position,
             teamId: player.team.id,
             countryId: player.country.id,
-            pictureUrl: player.pictureUrl
+            pictureUrl: player.pictureUrl,
+            tier: player.tier
         });
 
         const created = await this.getById(newPlayer.id);
@@ -38,6 +39,7 @@ export class PlayerRepositoryImpl implements PlayerRepository {
         if (player.team?.id) updateData.teamId = player.team.id;
         if (player.country?.id) updateData.countryId = player.country.id;
         if (player.pictureUrl !== undefined) updateData.pictureUrl = player.pictureUrl;
+        if (player.tier !== undefined) updateData.tier = player.tier;
 
         const [affectedCount] = await PlayerModel.update(updateData, {
             where: { id }
@@ -163,18 +165,29 @@ export class PlayerRepositoryImpl implements PlayerRepository {
     }
 
     /**
+     * Retrieve players by tier.
+     */
+    async getByTier(tier: number): Promise<Player[]> {
+        const models = await PlayerModel.findAll({
+            where: { tier },
+            include: [TeamModel, CountryModel]
+        });
+        return models.map(m => this.toEntity(m));
+    }
+
+    /**
      * Map a PlayerModel (Sequelize) to a Player domain entity.
      */
     private toEntity(model: PlayerModel): Player {
         if (!model) throw new Error('Player model is null');
 
         const team = model.team 
-            ? new Team(model.team.id, model.team.name, null as any, model.team.pictureUrl)
-            : new Team(model.teamId, '', null as any, '');
+            ? new Team(model.team.id, model.team.name, null as any, model.team.pictureUrl, model.team.tier)
+            : new Team(model.teamId, '', null as any, '', 1);
 
         const country = model.country 
-            ? new Country(model.country.id, model.country.name, model.country.pictureUrl)
-            : new Country(model.countryId, '', '');
+            ? new Country(model.country.id, model.country.name, model.country.pictureUrl, model.country.tierMale, model.country.tierFemale)
+            : new Country(model.countryId, '', '', 1, 1);
 
         return new Player(
             model.id,
@@ -182,7 +195,8 @@ export class PlayerRepositoryImpl implements PlayerRepository {
             model.position as PlayerPosition[],
             team,
             country,
-            model.pictureUrl
+            model.pictureUrl,
+            model.tier
         );
     }
 }

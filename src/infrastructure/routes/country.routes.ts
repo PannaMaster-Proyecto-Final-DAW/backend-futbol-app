@@ -11,6 +11,7 @@ import { GetCountryByIdUseCase } from "../../application/use-cases/country/get-b
 import { GetCountryByNameUseCase } from "../../application/use-cases/country/get-by-name.use-case.js";
 import { UpdateCountryUseCase } from "../../application/use-cases/country/update.use-case.js";
 import { DeleteCountryUseCase } from "../../application/use-cases/country/delete.use-case.js";
+import { GetCountriesByTierUseCase } from "../../application/use-cases/country/get-by-tier.use-case.js";
 import { idGenerator, countryRepository } from "../container.js";
 
 const router = Router();
@@ -22,6 +23,7 @@ const getCountryByIdUseCase = new GetCountryByIdUseCase(countryRepository);
 const getCountryByNameUseCase = new GetCountryByNameUseCase(countryRepository);
 const updateCountryUseCase = new UpdateCountryUseCase(countryRepository);
 const deleteCountryUseCase = new DeleteCountryUseCase(countryRepository);
+const getCountriesByTierUseCase = new GetCountriesByTierUseCase(countryRepository);
 
 const countryController = new CountryController(
     createCountryUseCase,
@@ -29,7 +31,8 @@ const countryController = new CountryController(
     getCountryByIdUseCase,
     getCountryByNameUseCase,
     updateCountryUseCase,
-    deleteCountryUseCase
+    deleteCountryUseCase,
+    getCountriesByTierUseCase
 );
 
 // Routes
@@ -37,6 +40,7 @@ router.post("/", countryController.create);
 router.get("/", countryController.getAll);
 router.get("/id/:id", countryController.getById);
 router.get("/name/:name", countryController.getByName);
+router.get("/tier/:category/:tier", countryController.getByTier);
 router.patch("/:id", countryController.update);
 router.delete("/:id", countryController.delete);
 

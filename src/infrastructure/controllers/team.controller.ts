@@ -6,6 +6,7 @@ import { GetAllTeamUseCase } from "../../application/use-cases/team/get-all.use-
 import { GetTeamByIdUseCase } from "../../application/use-cases/team/get-by-id.use-case.js";
 import { GetTeamByNameUseCase } from "../../application/use-cases/team/get-by-name.use-case.js";
 import { GetTeamsByLeagueUseCase } from "../../application/use-cases/team/get-by-league.use-case.js";
+import { GetTeamByTierUseCase } from "../../application/use-cases/team/get-by-tier.use-case.js";
 
 export class TeamController {
     constructor(
@@ -15,7 +16,8 @@ export class TeamController {
         private readonly getAllTeamUseCase: GetAllTeamUseCase,
         private readonly getTeamByIdUseCase: GetTeamByIdUseCase,
         private readonly getTeamByNameUseCase: GetTeamByNameUseCase,
-        private readonly getTeamsByLeagueUseCase: GetTeamsByLeagueUseCase
+        private readonly getTeamsByLeagueUseCase: GetTeamsByLeagueUseCase,
+        private readonly getTeamByTierUseCase: GetTeamByTierUseCase
     ) {
         this.create = this.create.bind(this);
         this.update = this.update.bind(this);
@@ -24,11 +26,12 @@ export class TeamController {
         this.getById = this.getById.bind(this);
         this.getByName = this.getByName.bind(this);
         this.getByLeague = this.getByLeague.bind(this);
+        this.getByTier = this.getByTier.bind(this);
     }
 
     async create(req: Request, res: Response): Promise<void> {
         try {
-            const { name, leagueId, league, pictureUrl } = req.body;
+            const { name, leagueId, league, pictureUrl, tier } = req.body;
 
             // Extract leagueId robustly
             const finalLeagueId = leagueId || (league && league.id);
@@ -37,7 +40,7 @@ export class TeamController {
                 throw new Error("leagueId is required");
             }
 
-            const team = await this.createTeamUseCase.execute({ name, leagueId: finalLeagueId, pictureUrl });
+            const team = await this.createTeamUseCase.execute({ name, leagueId: finalLeagueId, pictureUrl, tier });
             res.status(201).json(team);
         } catch (error: any) {
             res.status(400).json({ error: error.message });
@@ -47,7 +50,7 @@ export class TeamController {
     async update(req: Request, res: Response): Promise<void> {
         try {
             const id = req.params.id as string;
-            const { name, leagueId, league, pictureUrl } = req.body;
+            const { name, leagueId, league, pictureUrl, tier } = req.body;
 
             const finalLeagueId = leagueId || (league && league.id);
 
@@ -55,7 +58,8 @@ export class TeamController {
                 id,
                 name,
                 leagueId: finalLeagueId,
-                pictureUrl
+                pictureUrl,
+                tier
             });
             if (!team) {
                 res.status(404).json({ error: "Team not found" });
@@ -122,6 +126,19 @@ export class TeamController {
         try {
             const leagueId = req.params.leagueId as string;
             const teams = await this.getTeamsByLeagueUseCase.execute({ leagueId });
+            res.status(200).json(teams);
+        } catch (error: any) {
+            res.status(400).json({ error: error.message });
+        }
+    }
+
+    async getByTier(req: Request, res: Response): Promise<void> {
+        try {
+            const tier = parseInt(req.params.tier as string);
+            if (isNaN(tier)) {
+                throw new Error("Tier must be a number");
+            }
+            const teams = await this.getTeamByTierUseCase.execute({ tier });
             res.status(200).json(teams);
         } catch (error: any) {
             res.status(400).json({ error: error.message });

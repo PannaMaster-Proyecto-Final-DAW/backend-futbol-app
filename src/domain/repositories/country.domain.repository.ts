@@ -10,4 +10,5 @@ export interface CountryRepository {
     getAll(): Promise<Country[]>;
     getById(id: string): Promise<Country | null>;
     getByName(name: string): Promise<Country | null>;
+    getByTier(tier: number, category: 'male' | 'female'): Promise<Country[]>;
 }

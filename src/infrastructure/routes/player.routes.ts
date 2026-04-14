@@ -12,6 +12,7 @@ import { GetAllPlayerUseCase } from "../../application/use-cases/player/get-all.
 import { GetPlayerByIdUseCase } from "../../application/use-cases/player/get-by-id.use-case.js";
 import { GetPlayerByNameUseCase } from "../../application/use-cases/player/get-by-name.use-case.js";
 import { SearchPlayersUseCase } from "../../application/use-cases/player/search-players.use-case.js";
+import { GetPlayersByTierUseCase } from "../../application/use-cases/player/get-by-tier.use-case.js";
 
 // Infrastructure
 import {
@@ -40,6 +41,7 @@ const getAllPlayerUseCase = new GetAllPlayerUseCase(playerRepository);
 const getPlayerByIdUseCase = new GetPlayerByIdUseCase(playerRepository);
 const getPlayerByNameUseCase = new GetPlayerByNameUseCase(playerRepository);
 const searchPlayersUseCase = new SearchPlayersUseCase(playerRepository);
+const getPlayersByTierUseCase = new GetPlayersByTierUseCase(playerRepository);
 
 const playerController = new PlayerController(
     createPlayerUseCase,
@@ -48,7 +50,8 @@ const playerController = new PlayerController(
     getAllPlayerUseCase,
     getPlayerByIdUseCase,
     getPlayerByNameUseCase,
-    searchPlayersUseCase
+    searchPlayersUseCase,
+    getPlayersByTierUseCase
 );
 
 // Routes
@@ -57,6 +60,7 @@ router.get("/", playerController.getAll);
 router.get("/search", playerController.search);
 router.get("/id/:id", playerController.getById);
 router.get("/name/:name", playerController.getByName);
+router.get("/tier/:tier", playerController.getByTier);
 router.patch("/:id", playerController.update);
 router.delete("/:id", playerController.delete);
 

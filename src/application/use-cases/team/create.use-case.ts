@@ -12,6 +12,7 @@ export interface CreateTeamInput {
     name: string;
     leagueId: string;
     pictureUrl?: string;
+    tier?: number;
 }
 
 // Use Case to create a new team
@@ -38,7 +39,7 @@ export class CreateTeamUseCase {
         const id = this.idGenerator.generate();
 
         // 3. Creates the team entity
-        const team = new Team(id, input.name, league, input.pictureUrl || '');
+        const team = new Team(id, input.name, league, input.pictureUrl || '', input.tier ?? 1);
 
         // 4. Saves the team using the repository
         return this.teamRepository.create(team);

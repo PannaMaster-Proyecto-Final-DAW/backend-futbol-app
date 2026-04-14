@@ -57,6 +57,16 @@ module.exports = {
         type: Sequelize.TEXT,
         allowNull: true,
       },
+      tierMale: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        defaultValue: 1,
+      },
+      tierFemale: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        defaultValue: 1,
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,
@@ -132,6 +142,11 @@ module.exports = {
       picture_url: {
         type: Sequelize.STRING,
         allowNull: true,
+      },
+      tier: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        defaultValue: 1,
       },
       createdAt: {
         allowNull: false,
@@ -296,6 +311,11 @@ module.exports = {
       pictureUrl: {
         type: Sequelize.STRING,
         allowNull: true,
+      },
+      tier: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        defaultValue: 1,
       },
       createdAt: {
         allowNull: false,
