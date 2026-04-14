@@ -16,4 +16,5 @@ export interface PlayerRepository {
     getByTeamAndPosition(teamId: string, position: PlayerPosition): Promise<Player[]>;
     getByTeamAndCountry(teamId: string, countryId: string): Promise<Player[]>;
     getByTeamAndCountryAndPosition(teamId: string, countryId: string, position: PlayerPosition): Promise<Player[]>;
+    getByTier(tier: number): Promise<Player[]>;
 }

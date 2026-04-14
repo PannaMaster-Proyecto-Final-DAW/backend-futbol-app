@@ -44,4 +44,11 @@ export class InMemoryCountryRepository implements CountryRepository {
     async getByName(name: string): Promise<Country | null> {
         return this.countries.find(c => c.name.toLowerCase() === name.toLowerCase()) || null;
     }
+
+    // Get countries by tier
+    async getByTier(tier: number, category: 'male' | 'female'): Promise<Country[]> {
+        return this.countries.filter(c => {
+            return category === 'male' ? c.tierMale === tier : c.tierFemale === tier;
+        });
+    }
 }

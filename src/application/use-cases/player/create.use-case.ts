@@ -15,6 +15,7 @@ export interface CreatePlayerInput {
     teamId: string;
     countryId: string;
     pictureUrl?: string;
+    tier?: number;
 }
 
 // Use Case to create a new player
@@ -50,7 +51,8 @@ export class CreatePlayerUseCase {
             input.position,
             team,
             country,
-            input.pictureUrl || ''
+            input.pictureUrl || '',
+            input.tier ?? 1
         );
         return this.playerRepository.create(newPlayer);
     }

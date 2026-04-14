@@ -9,6 +9,7 @@ export interface UpdateTeamInput {
     name?: string;
     leagueId?: string;
     pictureUrl?: string;
+    tier?: number;
 }
 
 /**
@@ -45,7 +46,8 @@ export class UpdateTeamUseCase {
             existingTeam.id,
             input.name ?? existingTeam.name,
             league,
-            input.pictureUrl ?? existingTeam.pictureUrl
+            input.pictureUrl ?? existingTeam.pictureUrl,
+            input.tier ?? existingTeam.tier
         );
 
         // 4. Save changes

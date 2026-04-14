@@ -12,7 +12,9 @@ export class CountryRepositoryImpl implements CountryRepository {
         const newCountry = await CountryModel.create({
             id: country.id,
             name: country.name,
-            pictureUrl: country.pictureUrl
+            pictureUrl: country.pictureUrl,
+            tierMale: country.tierMale,
+            tierFemale: country.tierFemale
         });
 
         const created = await this.getById(newCountry.id);
@@ -30,6 +32,8 @@ export class CountryRepositoryImpl implements CountryRepository {
         //Verify which fields are going to be updated
         if (country.name) updateData.name = country.name;
         if (country.pictureUrl !== undefined) updateData.pictureUrl = country.pictureUrl;
+        if (country.tierMale !== undefined) updateData.tierMale = country.tierMale;
+        if (country.tierFemale !== undefined) updateData.tierFemale = country.tierFemale;
 
         // affectedCount is the number of rows affected by the update
         const [affectedCount] = await CountryModel.update(updateData, {
@@ -81,6 +85,15 @@ export class CountryRepositoryImpl implements CountryRepository {
     }
 
     /**
+     * Retrieve countries by tier and category.
+     */
+    async getByTier(tier: number, category: 'male' | 'female'): Promise<Country[]> {
+        const column = category === 'male' ? 'tierMale' : 'tierFemale';
+        const models = await CountryModel.findAll({ where: { [column]: tier } });
+        return models.map(m => this.toEntity(m));
+    }
+
+    /**
      * Map a CountryModel (Sequelize) to a Country domain entity.
      */
     private toEntity(model: CountryModel): Country {
@@ -88,7 +101,9 @@ export class CountryRepositoryImpl implements CountryRepository {
         return new Country(
             model.id,
             model.name,
-            model.pictureUrl
+            model.pictureUrl,
+            model.tierMale,
+            model.tierFemale
         );
     }
 }

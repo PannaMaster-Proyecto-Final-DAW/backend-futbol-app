@@ -6,5 +6,6 @@ export class Team {
         public name: string,
         public league: League, // Ref League
         public pictureUrl: string,
+        public tier: number, // 1 = easy, 2 = medium, 3 = hard
     ) { }
 }

@@ -13,7 +13,8 @@ export class TeamRepositoryImpl implements TeamRepository {
             id: team.id,
             name: team.name,
             leagueId: team.league.id,
-            pictureUrl: team.pictureUrl
+            pictureUrl: team.pictureUrl,
+            tier: team.tier
         });
 
         const created = await this.getById(newTeam.id);
@@ -30,6 +31,7 @@ export class TeamRepositoryImpl implements TeamRepository {
         if (team.name) updateData.name = team.name;
         if (team.league?.id) updateData.leagueId = team.league.id;
         if (team.pictureUrl !== undefined) updateData.pictureUrl = team.pictureUrl;
+        if (team.tier !== undefined) updateData.tier = team.tier;
 
         const [affectedCount] = await TeamModel.update(updateData, {
             where: { id: id }
@@ -83,6 +85,14 @@ export class TeamRepositoryImpl implements TeamRepository {
     }
 
     /**
+     * Retrieve teams by tier.
+     */
+    async getByTier(tier: number): Promise<Team[]> {
+        const models = await TeamModel.findAll({ where: { tier } });
+        return models.map(m => this.toEntity(m));
+    }
+
+    /**
      * Map a TeamModel (Sequelize) to a Team domain entity.
      */
     private toEntity(model: TeamModel): Team {
@@ -97,7 +107,8 @@ export class TeamRepositoryImpl implements TeamRepository {
             model.id,
             model.name,
             league,
-            model.pictureUrl
+            model.pictureUrl,
+            model.tier
         );
     }
 }
