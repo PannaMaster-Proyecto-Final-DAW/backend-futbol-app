@@ -30,6 +30,7 @@ export class TeamModel extends Model {
   @Column({
     type: DataType.STRING,
     allowNull: true,
+    field: 'pictureUrl',
   })
   declare pictureUrl: string;
 

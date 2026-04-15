@@ -1,4 +1,4 @@
-import { Player, PlayerPosition } from "../../domain/entities/player.entity.js";
+import { Player, PlayerPosition, PlayerGender } from "../../domain/entities/player.entity.js";
 import { PlayerRepository } from "../../domain/repositories/player.domain.repository.js";
 
 export class InMemoryPlayerRepository implements PlayerRepository {
@@ -76,5 +76,9 @@ export class InMemoryPlayerRepository implements PlayerRepository {
 
     async getByTier(tier: number): Promise<Player[]> {
         return this.players.filter(p => p.tier === tier);
+    }
+
+    async getByGender(gender: PlayerGender): Promise<Player[]> {
+        return this.players.filter(p => p.gender === gender);
     }
 }

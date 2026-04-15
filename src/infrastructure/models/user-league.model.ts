@@ -24,7 +24,7 @@ export class UserLeagueModel extends Model {
   declare inviteCode: string;
 
   @HasMany(() => UserLeagueMembershipModel)
-  declare members: UserLeagueMembershipModel[];
+  declare members: any[];
 }
 
 export default UserLeagueModel;

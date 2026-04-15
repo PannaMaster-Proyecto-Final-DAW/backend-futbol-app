@@ -1,4 +1,4 @@
-import type { Player, PlayerPosition } from "../entities/player.entity.js";
+import type { Player, PlayerPosition, PlayerGender } from "../entities/player.entity.js";
 
 export interface PlayerRepository {
     // CRUD operations
@@ -17,4 +17,5 @@ export interface PlayerRepository {
     getByTeamAndCountry(teamId: string, countryId: string): Promise<Player[]>;
     getByTeamAndCountryAndPosition(teamId: string, countryId: string, position: PlayerPosition): Promise<Player[]>;
     getByTier(tier: number): Promise<Player[]>;
+    getByGender(gender: PlayerGender): Promise<Player[]>;
 }

@@ -37,6 +37,7 @@ export class LeagueModel extends Model {
   @Column({
     type: DataType.TEXT,
     allowNull: true,
+    field: 'pictureUrl',
   })
   declare pictureUrl: string;
 }

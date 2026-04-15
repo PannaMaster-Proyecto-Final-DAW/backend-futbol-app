@@ -24,6 +24,11 @@ export enum PlayerPosition {
     ST = 'ST'
 }
 
+export enum PlayerGender {
+    MALE = 'male',
+    FEMALE = 'female'
+}
+
 export class Player {
     constructor(
         public id: string, // UUID
@@ -33,6 +38,6 @@ export class Player {
         public country: Country, // Ref Country
         public pictureUrl: string,
         public tier: number, // 1 = easy, 2 = medium, 3 = hard
+        public gender: PlayerGender
     ) { }
 }
-
