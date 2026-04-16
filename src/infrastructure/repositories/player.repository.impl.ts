@@ -1,4 +1,4 @@
-import { Player, PlayerPosition } from '../../domain/entities/player.entity.js';
+import { Player, PlayerPosition, PlayerGender } from '../../domain/entities/player.entity.js';
 import { Team } from '../../domain/entities/team.entity.js';
 import { Country } from '../../domain/entities/country.entity.js';
 import type { PlayerRepository } from '../../domain/repositories/player.domain.repository.js';
@@ -20,7 +20,8 @@ export class PlayerRepositoryImpl implements PlayerRepository {
             teamId: player.team.id,
             countryId: player.country.id,
             pictureUrl: player.pictureUrl,
-            tier: player.tier
+            tier: player.tier,
+            gender: player.gender
         });
 
         const created = await this.getById(newPlayer.id);
@@ -40,6 +41,7 @@ export class PlayerRepositoryImpl implements PlayerRepository {
         if (player.country?.id) updateData.countryId = player.country.id;
         if (player.pictureUrl !== undefined) updateData.pictureUrl = player.pictureUrl;
         if (player.tier !== undefined) updateData.tier = player.tier;
+        if (player.gender !== undefined) updateData.gender = player.gender;
 
         const [affectedCount] = await PlayerModel.update(updateData, {
             where: { id }
@@ -176,6 +178,17 @@ export class PlayerRepositoryImpl implements PlayerRepository {
     }
 
     /**
+     * Retrieve players by gender.
+     */
+    async getByGender(gender: PlayerGender): Promise<Player[]> {
+        const models = await PlayerModel.findAll({
+            where: { gender },
+            include: [TeamModel, CountryModel]
+        });
+        return models.map(m => this.toEntity(m));
+    }
+
+    /**
      * Map a PlayerModel (Sequelize) to a Player domain entity.
      */
     private toEntity(model: PlayerModel): Player {
@@ -196,7 +209,8 @@ export class PlayerRepositoryImpl implements PlayerRepository {
             team,
             country,
             model.pictureUrl,
-            model.tier
+            model.tier,
+            model.gender as PlayerGender
         );
     }
 }

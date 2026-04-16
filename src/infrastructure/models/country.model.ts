@@ -20,6 +20,7 @@ export class CountryModel extends Model {
   @Column({
     type: DataType.TEXT,
     allowNull: true,
+    field: 'pictureUrl',
   })
   declare pictureUrl: string;
 

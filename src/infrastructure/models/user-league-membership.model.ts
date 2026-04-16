@@ -30,7 +30,7 @@ export class UserLeagueMembershipModel extends Model {
   declare userLeagueId: string;
 
   @BelongsTo(() => UserLeagueModel)
-  declare league: UserLeagueModel;
+  declare league: any;
 
   @Column({
     type: DataType.INTEGER,

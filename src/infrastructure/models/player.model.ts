@@ -48,6 +48,7 @@ export class PlayerModel extends Model {
   @Column({
     type: DataType.STRING,
     allowNull: true,
+    field: 'pictureUrl',
   })
   declare pictureUrl: string;
 
@@ -60,6 +61,13 @@ export class PlayerModel extends Model {
     },
   })
   declare tier: number;
+
+  @Column({
+    type: DataType.ENUM('male', 'female'),
+    allowNull: false,
+    defaultValue: 'male',
+  })
+  declare gender: string;
 }
 
 export default PlayerModel;

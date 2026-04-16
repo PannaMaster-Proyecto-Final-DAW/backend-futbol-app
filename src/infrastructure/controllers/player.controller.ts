@@ -7,7 +7,8 @@ import { GetPlayerByIdUseCase } from "../../application/use-cases/player/get-by-
 import { GetPlayerByNameUseCase } from "../../application/use-cases/player/get-by-name.use-case.js";
 import { SearchPlayersUseCase } from "../../application/use-cases/player/search-players.use-case.js";
 import { GetPlayersByTierUseCase } from "../../application/use-cases/player/get-by-tier.use-case.js";
-import { PlayerPosition } from "../../domain/entities/player.entity.js";
+import { GetPlayersByGenderUseCase } from "../../application/use-cases/player/get-by-gender.use-case.js";
+import { PlayerPosition, PlayerGender } from "../../domain/entities/player.entity.js";
 
 export class PlayerController {
     constructor(
@@ -18,7 +19,8 @@ export class PlayerController {
         private readonly getPlayerByIdUseCase: GetPlayerByIdUseCase,
         private readonly getPlayerByNameUseCase: GetPlayerByNameUseCase,
         private readonly searchPlayersUseCase: SearchPlayersUseCase,
-        private readonly getPlayersByTierUseCase: GetPlayersByTierUseCase
+        private readonly getPlayersByTierUseCase: GetPlayersByTierUseCase,
+        private readonly getPlayersByGenderUseCase: GetPlayersByGenderUseCase
     ) {
         this.create = this.create.bind(this);
         this.update = this.update.bind(this);
@@ -28,19 +30,21 @@ export class PlayerController {
         this.getByName = this.getByName.bind(this);
         this.search = this.search.bind(this);
         this.getByTier = this.getByTier.bind(this);
+        this.getByGender = this.getByGender.bind(this);
     }
 
     // Create a new player
     async create(req: Request, res: Response): Promise<void> {
         try {
-            const { name, position, teamId, countryId, pictureUrl, tier } = req.body;
+            const { name, position, teamId, countryId, pictureUrl, tier, gender } = req.body;
             const player = await this.createPlayerUseCase.execute({
                 name,
                 position,
                 teamId,
                 countryId,
                 pictureUrl,
-                tier
+                tier,
+                gender
             });
             res.status(201).json(player);
         } catch (error: any) {
@@ -52,14 +56,15 @@ export class PlayerController {
     async update(req: Request, res: Response): Promise<void> {
         try {
             const id = req.params.id as string;
-            const { name, position, teamId, countryId, pictureUrl, tier } = req.body;
+            const { name, position, teamId, countryId, pictureUrl, tier, gender } = req.body;
             const player = await this.updatePlayerUseCase.execute(id, {
                 name,
                 position,
                 teamId,
                 countryId,
                 pictureUrl,
-                tier
+                tier,
+                gender
             });
             res.status(200).json(player);
         } catch (error: any) {
@@ -147,6 +152,21 @@ export class PlayerController {
                 return;
             }
             const players = await this.getPlayersByTierUseCase.execute({ tier: tierNum });
+            res.status(200).json(players);
+        } catch (error: any) {
+            res.status(500).json({ error: error.message });
+        }
+    }
+
+    // Get players by gender
+    async getByGender(req: Request, res: Response): Promise<void> {
+        try {
+            const gender = req.params.gender as PlayerGender;
+            if (gender !== 'male' && gender !== 'female') {
+                res.status(400).json({ error: "Gender must be 'male' or 'female'" });
+                return;
+            }
+            const players = await this.getPlayersByGenderUseCase.execute({ gender });
             res.status(200).json(players);
         } catch (error: any) {
             res.status(500).json({ error: error.message });

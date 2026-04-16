@@ -1,4 +1,4 @@
-import { Player, PlayerPosition } from "../../../domain/entities/player.entity.js";
+import { Player, PlayerPosition, PlayerGender } from "../../../domain/entities/player.entity.js";
 import type { PlayerRepository } from "../../../domain/repositories/player.domain.repository.js";
 import type { TeamRepository } from "../../../domain/repositories/team.domain.repository.js";
 import type { CountryRepository } from "../../../domain/repositories/country.domain.repository.js";
@@ -16,6 +16,7 @@ export interface CreatePlayerInput {
     countryId: string;
     pictureUrl?: string;
     tier?: number;
+    gender: PlayerGender;
 }
 
 // Use Case to create a new player
@@ -52,7 +53,8 @@ export class CreatePlayerUseCase {
             team,
             country,
             input.pictureUrl || '',
-            input.tier ?? 1
+            input.tier ?? 1,
+            input.gender
         );
         return this.playerRepository.create(newPlayer);
     }
