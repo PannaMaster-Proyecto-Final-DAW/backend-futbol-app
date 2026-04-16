@@ -7,6 +7,7 @@ import { GetUserByUserNameUseCase } from '../../application/use-cases/user/get-b
 import { GetUserByEmailUseCase } from '../../application/use-cases/user/get-by-email.use-case.js';
 import { GetUsersByRoleUseCase } from '../../application/use-cases/user/get-by-role.use-case.js';
 import { GetAllUsersUseCase } from '../../application/use-cases/user/get-all.use-case.js';
+import { LoginUserUseCase } from '../../application/use-cases/user/login.use-case.js';
 import { UserRole } from '../../domain/entities/user.entity.js';
 
 export class UserController {
@@ -21,6 +22,7 @@ export class UserController {
      * @param getUserByEmailUseCase - Use case to get a user by email.
      * @param getUsersByRoleUseCase - Use case to get users by role.
      * @param getAllUsersUseCase - Use case to get all users.
+     * @param loginUserUseCase - Use case to handle user login.
      */
     constructor(
         private readonly createUserUseCase: CreateUserUseCase,
@@ -30,7 +32,8 @@ export class UserController {
         private readonly getUserByUserNameUseCase: GetUserByUserNameUseCase,
         private readonly getUserByEmailUseCase: GetUserByEmailUseCase,
         private readonly getUsersByRoleUseCase: GetUsersByRoleUseCase,
-        private readonly getAllUsersUseCase: GetAllUsersUseCase
+        private readonly getAllUsersUseCase: GetAllUsersUseCase,
+        private readonly loginUserUseCase: LoginUserUseCase
     ) {
         this.create = this.create.bind(this);
         this.update = this.update.bind(this);
@@ -40,6 +43,7 @@ export class UserController {
         this.getByEmail = this.getByEmail.bind(this);
         this.getByRole = this.getByRole.bind(this);
         this.getAll = this.getAll.bind(this);
+        this.login = this.login.bind(this);
     }
 
     /**
@@ -59,6 +63,26 @@ export class UserController {
         } catch (error: any) {
             console.error(error);
             res.status(500).json({ error: error.message || 'Internal Server Error' });
+        }
+    }
+
+    /**
+     * User login.
+     * Expects identifier (email or userName) and password in the request body.
+     */
+    async login(req: Request, res: Response) {
+        try {
+            const { identifier, password } = req.body;
+            if (!identifier || !password) {
+                res.status(400).json({ error: 'Identifier and password are required' });
+                return;
+            }
+            const user = await this.loginUserUseCase.execute({ identifier, password });
+            res.status(200).json(user);
+        } catch (error: any) {
+            console.error(error);
+            const status = error.message === 'Invalid credentials' ? 401 : 500;
+            res.status(status).json({ error: error.message || 'Internal Server Error' });
         }
     }
 

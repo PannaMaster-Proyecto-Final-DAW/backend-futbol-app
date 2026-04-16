@@ -139,7 +139,7 @@ module.exports = {
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE',
       },
-      picture_url: {
+      pictureUrl: {
         type: Sequelize.STRING,
         allowNull: true,
       },
@@ -317,6 +317,11 @@ module.exports = {
         allowNull: false,
         defaultValue: 1,
       },
+      gender: {
+        type: Sequelize.ENUM('male', 'female'),
+        allowNull: false,
+        defaultValue: 'male',
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,
@@ -343,5 +348,6 @@ module.exports = {
     await queryInterface.sequelize.query('DROP TYPE IF EXISTS "enum_formations_goalkeeper";');
     await queryInterface.sequelize.query('DROP TYPE IF EXISTS "enum_users_role";');
     await queryInterface.sequelize.query('DROP TYPE IF EXISTS "enum_leagues_category";');
+    await queryInterface.sequelize.query('DROP TYPE IF EXISTS "enum_players_gender";');
   },
 };

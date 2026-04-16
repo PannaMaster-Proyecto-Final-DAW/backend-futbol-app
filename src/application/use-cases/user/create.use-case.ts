@@ -1,15 +1,8 @@
 import { UserRepository } from "../../../domain/repositories/user.domain.repository.js";
 import { User, UserRole } from "../../../domain/entities/user.entity.js";
 
-//Define a port for the encryption service
-export interface PasswordHasher {
-    hash(password: string): Promise<string>;
-}
-
-//Define a port for the id generation service
-export interface IdGenerator {
-    generate(): string;
-}
+import { PasswordHasher } from "../../interfaces/password-hasher.interface.js";
+import { IdGenerator } from "../../interfaces/id-generator.interface.js";
 
 export interface CreateInput {
     userName: string;
