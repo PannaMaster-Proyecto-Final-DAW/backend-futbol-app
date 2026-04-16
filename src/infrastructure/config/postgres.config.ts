@@ -24,7 +24,7 @@ const sequelize = new Sequelize({
     port: Number(process.env.DB_PORT),
     dialect: 'postgres',
     models: [UserModel, LeagueModel, CountryModel, FormationModel, TeamModel, PlayerModel, UserLeagueModel, UserLeagueMembershipModel],
-    logging: console.log,
+    logging: false,
     dialectOptions: {
         ssl: {
             require: true,
