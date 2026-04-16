@@ -12,6 +12,7 @@ import { GetUserByUserNameUseCase } from '../../application/use-cases/user/get-b
 import { GetUserByEmailUseCase } from '../../application/use-cases/user/get-by-email.use-case.js';
 import { GetUsersByRoleUseCase } from '../../application/use-cases/user/get-by-role.use-case.js';
 import { GetAllUsersUseCase } from '../../application/use-cases/user/get-all.use-case.js';
+import { LoginUserUseCase } from '../../application/use-cases/user/login.use-case.js';
 import { userRepository, passwordHasher, idGenerator } from '../container.js';
 
 const router = Router();
@@ -25,6 +26,7 @@ const getUserByUserNameUseCase = new GetUserByUserNameUseCase(userRepository);
 const getUserByEmailUseCase = new GetUserByEmailUseCase(userRepository);
 const getUsersByRoleUseCase = new GetUsersByRoleUseCase(userRepository);
 const getAllUsersUseCase = new GetAllUsersUseCase(userRepository);
+const loginUserUseCase = new LoginUserUseCase(userRepository, passwordHasher);
 
 const userController = new UserController(
     createUserUseCase,
@@ -34,10 +36,12 @@ const userController = new UserController(
     getUserByUserNameUseCase,
     getUserByEmailUseCase,
     getUsersByRoleUseCase,
-    getAllUsersUseCase
+    getAllUsersUseCase,
+    loginUserUseCase
 );
 
 // Routes
+router.post('/login', userController.login);
 router.post('/', userController.create);
 router.get('/', userController.getAll);
 router.get('/id/:id', userController.getById);

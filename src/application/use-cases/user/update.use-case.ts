@@ -1,6 +1,6 @@
 import { User, UserRole } from "../../../domain/entities/user.entity.js";
 import { UserRepository } from "../../../domain/repositories/user.domain.repository.js";
-import { PasswordHasher } from "./create.use-case.js";
+import { PasswordHasher } from "../../interfaces/password-hasher.interface.js";
 
 export interface UpdateInput {
     userName?: string;
