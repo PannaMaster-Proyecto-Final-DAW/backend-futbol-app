@@ -11,7 +11,7 @@
 
 // --- InMemory Repositories ---
 import { InMemoryCountryRepository } from "./repositories/in-memory-country.repository.js";
-import { InMemoryFormationRepository } from "./repositories/in-memory-formation.js";
+import { InMemoryFormationRepository } from "./repositories/in-memory-formation.repository.js";
 import { InMemoryLeagueRepository } from "./repositories/in-memory-league.repository.js";
 import { InMemoryTeamRepository } from "./repositories/in-memory-team.repository.js";
 import { InMemoryPlayerRepository } from "./repositories/in-memory-player.repository.js";

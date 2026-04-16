@@ -1,4 +1,4 @@
-import { UserRepository } from "../../../domain/repositories/user.domain.repositoy.js";
+import { UserRepository } from "../../../domain/repositories/user.domain.repository.js";
 import { User, UserRole } from "../../../domain/entities/user.entity.js";
 
 /**

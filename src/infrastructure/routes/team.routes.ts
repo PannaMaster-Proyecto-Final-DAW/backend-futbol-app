@@ -12,7 +12,7 @@ import { GetAllTeamUseCase } from "../../application/use-cases/team/get-all.use-
 import { GetTeamByIdUseCase } from "../../application/use-cases/team/get-by-id.use-case.js";
 import { GetTeamByNameUseCase } from "../../application/use-cases/team/get-by-name.use-case.js";
 import { GetTeamsByLeagueUseCase } from "../../application/use-cases/team/get-by-league.use-case.js";
-import { GetTeamByTierUseCase } from "../../application/use-cases/team/get-by-tier.use-case.ts";
+import { GetTeamByTierUseCase } from "../../application/use-cases/team/get-by-tier.use-case.js";
 import { idGenerator, leagueRepository, teamRepository } from "../container.js";
 
 const router = Router();
