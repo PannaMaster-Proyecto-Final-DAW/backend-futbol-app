@@ -1,4 +1,4 @@
-import type { UserRepository } from "../../domain/repositories/user.domain.repositoy.js";
+import type { UserRepository } from "../../domain/repositories/user.domain.repository.js";
 import type { User, UserRole } from "../../domain/entities/user.entity.js";
 
 export class InMemoryUserRepository implements UserRepository {

@@ -4,7 +4,7 @@ import type { LeagueRepository } from '../../domain/repositories/league.domain.r
 import { LeagueModel } from '../models/league.model.js';
 
 export class LeagueRepositoryImpl implements LeagueRepository {
-    
+
     /**
      * Create a new league and persist it to the database.
      */
@@ -97,11 +97,11 @@ export class LeagueRepositoryImpl implements LeagueRepository {
      */
     private toEntity(model: LeagueModel): League {
         if (!model) throw new Error('League model is null');
-        
+
         // If the country association is loaded, use it; otherwise, use the ID.
-        const country = model.country 
-            ? new Country(model.country.id, model.country.name, model.country.pictureUrl)
-            : new Country(model.countryId, '', ''); 
+        const country = model.country
+            ? new Country(model.country.id, model.country.name, model.country.pictureUrl, model.country.tierMale, model.country.tierFemale)
+            : new Country(model.countryId, '', '', 1, 1);
 
         return new League(
             model.id,

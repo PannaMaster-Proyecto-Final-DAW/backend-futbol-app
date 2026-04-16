@@ -1,6 +1,6 @@
 import { UserLeagueMembershipRepository } from "../../../domain/repositories/user-league-membership.domain.repository.js";
 import { UserLeagueRepository } from "../../../domain/repositories/user-league.domain.repository.js";
-import { UserRepository } from "../../../domain/repositories/user.domain.repositoy.js";
+import { UserRepository } from "../../../domain/repositories/user.domain.repository.js";
 import { UserLeagueMembership } from "../../../domain/entities/user-league-membership.entity.js";
 
 export interface IdGenerator {
