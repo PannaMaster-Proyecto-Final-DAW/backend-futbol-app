@@ -33,6 +33,7 @@ export class Player {
     constructor(
         public id: string, // UUID
         public name: string,
+        public age: number,
         public position: PlayerPosition[],
         public team: Team, // Ref Team
         public country: Country, // Ref Country

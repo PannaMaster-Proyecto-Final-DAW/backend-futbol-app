@@ -19,6 +19,16 @@ export class PlayerModel extends Model {
   declare name: string;
 
   @Column({
+    type: DataType.INTEGER,
+    allowNull: false,
+    defaultValue: 0,
+    validate: {
+      min: 0,
+    },
+  })
+  declare age: number;
+
+  @Column({
     type: DataType.ARRAY(DataType.STRING),
     allowNull: false,
     defaultValue: [],
