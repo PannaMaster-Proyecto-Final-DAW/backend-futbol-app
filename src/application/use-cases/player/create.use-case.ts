@@ -11,6 +11,7 @@ export interface IdGenerator {
 // Input for Player creation
 export interface CreatePlayerInput {
     name: string;
+    age: number;
     position: PlayerPosition[];
     teamId: string;
     countryId: string;
@@ -46,9 +47,14 @@ export class CreatePlayerUseCase {
 
         const newId = this.idGenerator.generate();
 
+        if (input.age < 0) {
+            throw new Error('Age cannot be negative');
+        }
+
         const newPlayer = new Player(
             newId,
             input.name,
+            input.age,
             input.position,
             team,
             country,

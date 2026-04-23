@@ -5,6 +5,7 @@ import type { CountryRepository } from "../../../domain/repositories/country.dom
 
 export interface UpdatePlayerInput {
     name?: string;
+    age?: number;
     position?: PlayerPosition[];
     teamId?: string;
     countryId?: string;
@@ -42,6 +43,10 @@ export class UpdatePlayerUseCase {
 
         // We use strict check ( !== undefined ) to allow updates to falsy values
         if (input.name !== undefined) player.name = input.name;
+        if (input.age !== undefined) {
+            if (input.age < 0) throw new Error('Age cannot be negative');
+            player.age = input.age;
+        }
         if (input.position !== undefined) player.position = input.position;
         if (input.pictureUrl !== undefined) player.pictureUrl = input.pictureUrl;
         if (input.tier !== undefined) player.tier = input.tier;

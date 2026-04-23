@@ -16,6 +16,7 @@ export class PlayerRepositoryImpl implements PlayerRepository {
         const newPlayer = await PlayerModel.create({
             id: player.id,
             name: player.name,
+            age: player.age,
             position: player.position,
             teamId: player.team.id,
             countryId: player.country.id,
@@ -36,6 +37,7 @@ export class PlayerRepositoryImpl implements PlayerRepository {
         const updateData: any = {};
 
         if (player.name) updateData.name = player.name;
+        if (player.age !== undefined) updateData.age = player.age;
         if (player.position) updateData.position = player.position;
         if (player.team?.id) updateData.teamId = player.team.id;
         if (player.country?.id) updateData.countryId = player.country.id;
@@ -205,6 +207,7 @@ export class PlayerRepositoryImpl implements PlayerRepository {
         return new Player(
             model.id,
             model.name,
+            model.age,
             model.position as PlayerPosition[],
             team,
             country,

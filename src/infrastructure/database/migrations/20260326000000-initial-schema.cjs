@@ -283,6 +283,11 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
+      age: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        defaultValue: 0,
+      },
       position: {
         type: Sequelize.ARRAY(Sequelize.STRING),
         allowNull: false,
