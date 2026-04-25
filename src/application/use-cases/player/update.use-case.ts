@@ -6,6 +6,7 @@ import type { CountryRepository } from "../../../domain/repositories/country.dom
 export interface UpdatePlayerInput {
     name?: string;
     age?: number;
+    birthdate?: string;
     position?: PlayerPosition[];
     teamId?: string;
     countryId?: string;
@@ -46,6 +47,13 @@ export class UpdatePlayerUseCase {
         if (input.age !== undefined) {
             if (input.age < 0) throw new Error('Age cannot be negative');
             player.age = input.age;
+        }
+        if (input.birthdate !== undefined) {
+            const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+            if (!dateRegex.test(input.birthdate)) {
+                throw new Error('Birthdate must be in YYYY-MM-DD format');
+            }
+            player.birthdate = input.birthdate;
         }
         if (input.position !== undefined) player.position = input.position;
         if (input.pictureUrl !== undefined) player.pictureUrl = input.pictureUrl;

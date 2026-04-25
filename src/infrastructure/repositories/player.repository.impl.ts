@@ -17,6 +17,7 @@ export class PlayerRepositoryImpl implements PlayerRepository {
             id: player.id,
             name: player.name,
             age: player.age,
+            birthdate: player.birthdate,
             position: player.position,
             teamId: player.team.id,
             countryId: player.country.id,
@@ -38,6 +39,7 @@ export class PlayerRepositoryImpl implements PlayerRepository {
 
         if (player.name) updateData.name = player.name;
         if (player.age !== undefined) updateData.age = player.age;
+        if (player.birthdate !== undefined) updateData.birthdate = player.birthdate;
         if (player.position) updateData.position = player.position;
         if (player.team?.id) updateData.teamId = player.team.id;
         if (player.country?.id) updateData.countryId = player.country.id;
@@ -208,6 +210,7 @@ export class PlayerRepositoryImpl implements PlayerRepository {
             model.id,
             model.name,
             model.age,
+            model.birthdate,
             model.position as PlayerPosition[],
             team,
             country,

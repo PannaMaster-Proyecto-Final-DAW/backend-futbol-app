@@ -288,6 +288,11 @@ module.exports = {
         allowNull: false,
         defaultValue: 0,
       },
+      birthdate: {
+        type: Sequelize.STRING,
+        allowNull: false,
+        defaultValue: '1900-01-01',
+      },
       position: {
         type: Sequelize.ARRAY(Sequelize.STRING),
         allowNull: false,
