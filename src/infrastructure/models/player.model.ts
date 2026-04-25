@@ -29,6 +29,16 @@ export class PlayerModel extends Model {
   declare age: number;
 
   @Column({
+    type: DataType.STRING,
+    allowNull: false,
+    defaultValue: '1900-01-01',
+    validate: {
+      is: /^\d{4}-\d{2}-\d{2}$/,
+    },
+  })
+  declare birthdate: string;
+
+  @Column({
     type: DataType.ARRAY(DataType.STRING),
     allowNull: false,
     defaultValue: [],

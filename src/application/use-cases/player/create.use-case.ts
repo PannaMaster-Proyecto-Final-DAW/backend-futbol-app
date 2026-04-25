@@ -12,6 +12,7 @@ export interface IdGenerator {
 export interface CreatePlayerInput {
     name: string;
     age: number;
+    birthdate: string;
     position: PlayerPosition[];
     teamId: string;
     countryId: string;
@@ -51,10 +52,17 @@ export class CreatePlayerUseCase {
             throw new Error('Age cannot be negative');
         }
 
+        // Validate birthdate format (YYYY-MM-DD)
+        const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+        if (!dateRegex.test(input.birthdate)) {
+            throw new Error('Birthdate must be in YYYY-MM-DD format');
+        }
+
         const newPlayer = new Player(
             newId,
             input.name,
             input.age,
+            input.birthdate,
             input.position,
             team,
             country,

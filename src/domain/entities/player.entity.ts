@@ -34,6 +34,7 @@ export class Player {
         public id: string, // UUID
         public name: string,
         public age: number,
+        public birthdate: string, // Format: YYYY-MM-DD
         public position: PlayerPosition[],
         public team: Team, // Ref Team
         public country: Country, // Ref Country
