@@ -1,6 +1,7 @@
 import 'reflect-metadata'; // @QUESTION
 import express from 'express';
 import dotenv from 'dotenv';
+import cors from 'cors';
 import { connectDB } from './infrastructure/config/postgres.config.js';
 
 dotenv.config();
@@ -9,6 +10,7 @@ const app = express();
 const PORT = process.env.PORT;
 
 // Middlewares
+app.use(cors());
 app.use(express.json());
 
 // Routes
