@@ -4,6 +4,10 @@ import { Router } from "express";
 // Controller
 import { CountryController } from "../controllers/country.controller.js";
 
+// Validation
+import { validateRequest } from "./middlewares/validate-request.middleware.js";
+import { createCountrySchema, updateCountrySchema } from "../validation/schemas/country.schema.js";
+
 // Use Cases
 import { CreateCountryUseCase } from "../../application/use-cases/country/create.use-case.js";
 import { GetAllCountryUseCase } from "../../application/use-cases/country/get-all.use-case.js";
@@ -36,12 +40,12 @@ const countryController = new CountryController(
 );
 
 // Routes
-router.post("/", countryController.create);
+router.post("/", validateRequest(createCountrySchema), countryController.create);
 router.get("/", countryController.getAll);
 router.get("/id/:id", countryController.getById);
 router.get("/name/:name", countryController.getByName);
 router.get("/tier/:category/:tier", countryController.getByTier);
-router.patch("/:id", countryController.update);
+router.patch("/:id", validateRequest(updateCountrySchema), countryController.update);
 router.delete("/:id", countryController.delete);
 
 export { router as countryRouter }

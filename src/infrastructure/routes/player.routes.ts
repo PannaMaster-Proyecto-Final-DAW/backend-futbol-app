@@ -4,6 +4,10 @@ import { Router } from "express";
 // Controller
 import { PlayerController } from "../controllers/player.controller.js";
 
+// Validation
+import { validateRequest } from "./middlewares/validate-request.middleware.js";
+import { createPlayerSchema, updatePlayerSchema } from "../validation/schemas/player.schema.js";
+
 // Use Cases
 import { CreatePlayerUseCase } from "../../application/use-cases/player/create.use-case.js";
 import { UpdatePlayerUseCase } from "../../application/use-cases/player/update.use-case.js";
@@ -58,14 +62,14 @@ const playerController = new PlayerController(
 );
 
 // Routes
-router.post("/", playerController.create);
+router.post("/", validateRequest(createPlayerSchema), playerController.create);
 router.get("/", playerController.getAll);
 router.get("/search", playerController.search);
 router.get("/id/:id", playerController.getById);
 router.get("/name/:name", playerController.getByName);
 router.get("/tier/:tier", playerController.getByTier);
 router.get("/gender/:gender", playerController.getByGender);
-router.patch("/:id", playerController.update);
+router.patch("/:id", validateRequest(updatePlayerSchema), playerController.update);
 router.delete("/:id", playerController.delete);
 
 export { router as playerRouter }

@@ -2,6 +2,8 @@ import type { League, LeagueCategory } from "../../../domain/entities/league.ent
 import { League as LeagueEntity } from "../../../domain/entities/league.entity.js";
 import type { LeagueRepository } from "../../../domain/repositories/league.domain.repository.js";
 import type { CountryRepository } from "../../../domain/repositories/country.domain.repository.js";
+import { updateLeagueSchema } from "../../../infrastructure/validation/schemas/league.schema.js";
+import { validateData } from "../../../infrastructure/validation/zod-validator.js";
 
 // Input for League update
 export interface UpdateLeagueInput {
@@ -28,16 +30,18 @@ export class UpdateLeagueUseCase {
      * @returns A promise that resolves to the updated league or null if not found.
      */
     async execute(input: UpdateLeagueInput): Promise<League | null> {
+        const validatedInput = validateData(updateLeagueSchema, input);
+
         // 1. Get existing league
         const existingLeague = await this.leagueRepository.getById(input.id);
         if (!existingLeague) return null;
 
         // 2. Resolve country reference
         let country = existingLeague.country;
-        if (input.countryId !== undefined && input.countryId !== existingLeague.country.id) {
-            const foundCountry = await this.countryRepository.getById(input.countryId);
+        if (validatedInput.countryId !== undefined && validatedInput.countryId !== existingLeague.country.id) {
+            const foundCountry = await this.countryRepository.getById(validatedInput.countryId);
             if (!foundCountry) {
-                throw new Error(`Country with id ${input.countryId} not found`);
+                throw new Error(`Country with id ${validatedInput.countryId} not found`);
             }
             country = foundCountry;
         }
@@ -45,10 +49,10 @@ export class UpdateLeagueUseCase {
         // 3. Update fields
         const updatedLeague = new LeagueEntity(
             existingLeague.id,
-            input.name ?? existingLeague.name,
+            validatedInput.name ?? existingLeague.name,
             country,
-            input.category ?? existingLeague.category,
-            input.pictureUrl ?? existingLeague.pictureUrl
+            validatedInput.category ?? existingLeague.category,
+            validatedInput.pictureUrl ?? existingLeague.pictureUrl
         );
 
         // 4. Save changes

@@ -1,4 +1,6 @@
 import { Player, PlayerPosition, PlayerGender } from "../../../domain/entities/player.entity.js";
+import { createPlayerSchema } from "../../../infrastructure/validation/schemas/player.schema.js";
+import { validateData } from "../../../infrastructure/validation/zod-validator.js";
 import type { PlayerRepository } from "../../../domain/repositories/player.domain.repository.js";
 import type { TeamRepository } from "../../../domain/repositories/team.domain.repository.js";
 import type { CountryRepository } from "../../../domain/repositories/country.domain.repository.js";
@@ -36,39 +38,31 @@ export class CreatePlayerUseCase {
      * @returns The created Player entity.
      */
     async execute(input: CreatePlayerInput): Promise<Player> {
-        const team = await this.teamRepository.getById(input.teamId);
+        const validatedInput = validateData(createPlayerSchema, input);
+
+        const team = await this.teamRepository.getById(validatedInput.teamId);
         if (!team) {
-            throw new Error(`Team with id ${input.teamId} not found`);
+            throw new Error(`Team with id ${validatedInput.teamId} not found`);
         }
 
-        const country = await this.countryRepository.getById(input.countryId);
+        const country = await this.countryRepository.getById(validatedInput.countryId);
         if (!country) {
-            throw new Error(`Country with id ${input.countryId} not found`);
+            throw new Error(`Country with id ${validatedInput.countryId} not found`);
         }
 
         const newId = this.idGenerator.generate();
 
-        if (input.age < 0) {
-            throw new Error('Age cannot be negative');
-        }
-
-        // Validate birthdate format (YYYY-MM-DD)
-        const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
-        if (!dateRegex.test(input.birthdate)) {
-            throw new Error('Birthdate must be in YYYY-MM-DD format');
-        }
-
         const newPlayer = new Player(
             newId,
-            input.name,
-            input.age,
-            input.birthdate,
-            input.position,
+            validatedInput.name,
+            validatedInput.age,
+            validatedInput.birthdate,
+            validatedInput.position,
             team,
             country,
-            input.pictureUrl || '',
-            input.tier ?? 1,
-            input.gender
+            validatedInput.pictureUrl || '',
+            validatedInput.tier ?? 1,
+            validatedInput.gender
         );
         return this.playerRepository.create(newPlayer);
     }

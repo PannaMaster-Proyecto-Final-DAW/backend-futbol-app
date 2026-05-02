@@ -1,6 +1,8 @@
 import { Formation } from "../../../domain/entities/formation.entity.js";
 import { FormationRepository } from "../../../domain/repositories/formation.domain.repository.js";
 import { PlayerPosition } from "../../../domain/entities/player.entity.js";
+import { createFormationSchema } from "../../../infrastructure/validation/schemas/formation.schema.js";
+import { validateData } from "../../../infrastructure/validation/zod-validator.js";
 
 // Port ID generation
 export interface IdGenerator {
@@ -30,28 +32,26 @@ export class CreateFormationUseCase {
      * @returns The created formation
      */
     async execute(input: CreateFormationInput): Promise<Formation> {
+        const validatedInput = validateData(createFormationSchema, input);
+
         // 1. Generates a unique ID 
         const id = this.idGenerator.generate();
 
         let formation: Formation;
 
         // 2. Decide creation mode
-        if (input.positionsList && input.positionsList.length > 0) {
-            // Validation: Ensure exactly 11 players are provided for automatic mode
-            if (input.positionsList.length !== 11) {
-                throw new Error(`Formation creation failed: Expected 11 positions, but received ${input.positionsList.length}.`);
-            }
+        if (validatedInput.positionsList && validatedInput.positionsList.length > 0) {
             // Automatic Classification Mode
-            formation = Formation.createFromPositionsList(id, input.name, input.positionsList);
+            formation = Formation.createFromPositionsList(id, validatedInput.name, validatedInput.positionsList);
         } else {
             // Manual Mode
             formation = new Formation(
                 id,
-                input.name,
-                input.goalkeeper ?? PlayerPosition.GK,
-                input.defenders ?? [],
-                input.midfielders ?? [],
-                input.forwards ?? []
+                validatedInput.name,
+                validatedInput.goalkeeper ?? PlayerPosition.GK,
+                validatedInput.defenders ?? [],
+                validatedInput.midfielders ?? [],
+                validatedInput.forwards ?? []
             );
         }
 

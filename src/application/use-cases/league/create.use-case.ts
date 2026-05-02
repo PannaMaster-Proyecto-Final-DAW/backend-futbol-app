@@ -1,6 +1,9 @@
-import type { League, LeagueCategory } from "../../../domain/entities/league.entity.js";
+import { League } from "../../../domain/entities/league.entity.js";
+import type { LeagueCategory } from "../../../domain/entities/league.entity.js";
 import type { LeagueRepository } from "../../../domain/repositories/league.domain.repository.js";
 import type { CountryRepository } from "../../../domain/repositories/country.domain.repository.js";
+import { createLeagueSchema } from "../../../infrastructure/validation/schemas/league.schema.js";
+import { validateData } from "../../../infrastructure/validation/zod-validator.js";
 
 // Port ID generation 
 export interface IdGenerator {
@@ -34,32 +37,24 @@ export class CreateLeagueUseCase {
      * @returns The created league
      */
     async execute(input: CreateLeagueInput): Promise<League> {
+        const validatedInput = validateData(createLeagueSchema, input);
+
         // 1. Fetch the country by ID
-        const country = await this.countryRepository.getById(input.countryId);
+        const country = await this.countryRepository.getById(validatedInput.countryId);
         if (!country) {
-            throw new Error(`Country with id ${input.countryId} not found`);
+            throw new Error(`Country with id ${validatedInput.countryId} not found`);
         }
 
         // 2. Generates a unique ID 
         const newId = this.idGenerator.generate();
 
         // 3. Creates the league entity
-        const newLeague = {
-            id: newId,
-            name: input.name,
-            country: country,
-            category: input.category,
-            pictureUrl: input.pictureUrl
-        } as League; // Note: Assuming League can be instantiated this way or has a constructor accepting these
-
-        // Note: If League is a class, use: const newLeague = new League(newId, input.name, country, input.category);
-        // Let's use the constructor as seen in the original file
-        const leagueInstance = new (await import("../../../domain/entities/league.entity.js")).League(
+        const leagueInstance = new League(
             newId,
-            input.name,
+            validatedInput.name,
             country,
-            input.category,
-            input.pictureUrl
+            validatedInput.category,
+            validatedInput.pictureUrl || ''
         );
 
         // 4. Saves the league using the repository
