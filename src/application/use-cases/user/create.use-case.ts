@@ -32,7 +32,7 @@ export class CreateUserUseCase {
         //Hash the password
         const hashedPassword = await this.passwordHasher.hash(validatedInput.password);
 
-        //Generate ID and create user
+        //Generate ID and create user 
         const newUser = new User(
             this.idGenerator.generate(),
             validatedInput.userName,
@@ -44,3 +44,4 @@ export class CreateUserUseCase {
         return this.userRepository.create(newUser);
     }
 }
+
