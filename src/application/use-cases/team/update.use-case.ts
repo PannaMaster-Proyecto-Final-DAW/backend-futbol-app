@@ -2,6 +2,8 @@ import type { Team } from "../../../domain/entities/team.entity.js";
 import { Team as TeamEntity } from "../../../domain/entities/team.entity.js";
 import type { TeamRepository } from "../../../domain/repositories/team.domain.repository.js";
 import type { LeagueRepository } from "../../../domain/repositories/league.domain.repository.js";
+import { updateTeamSchema } from "../../../infrastructure/validation/schemas/team.schema.js";
+import { validateData } from "../../../infrastructure/validation/zod-validator.js";
 
 // Input for Team update
 export interface UpdateTeamInput {
@@ -27,16 +29,18 @@ export class UpdateTeamUseCase {
      * @returns A promise that resolves to the updated team or null if not found.
      */
     async execute(input: UpdateTeamInput): Promise<Team | null> {
+        const validatedInput = validateData(updateTeamSchema, input);
+
         // 1. Get existing team
         const existingTeam = await this.teamRepository.getById(input.id);
         if (!existingTeam) return null;
 
         // 2. Resolve league reference
         let league = existingTeam.league;
-        if (input.leagueId !== undefined && input.leagueId !== existingTeam.league.id) {
-            const foundLeague = await this.leagueRepository.getById(input.leagueId);
+        if (validatedInput.leagueId !== undefined && validatedInput.leagueId !== existingTeam.league.id) {
+            const foundLeague = await this.leagueRepository.getById(validatedInput.leagueId);
             if (!foundLeague) {
-                throw new Error(`League with id ${input.leagueId} not found`);
+                throw new Error(`League with id ${validatedInput.leagueId} not found`);
             }
             league = foundLeague;
         }
@@ -44,10 +48,10 @@ export class UpdateTeamUseCase {
         // 3. Update fields
         const updatedTeam = new TeamEntity(
             existingTeam.id,
-            input.name ?? existingTeam.name,
+            validatedInput.name ?? existingTeam.name,
             league,
-            input.pictureUrl ?? existingTeam.pictureUrl,
-            input.tier ?? existingTeam.tier
+            validatedInput.pictureUrl ?? existingTeam.pictureUrl,
+            validatedInput.tier ?? existingTeam.tier
         );
 
         // 4. Save changes

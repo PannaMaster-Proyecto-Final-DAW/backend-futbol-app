@@ -1,5 +1,7 @@
 import { UserLeagueRepository } from "../../../domain/repositories/user-league.domain.repository.js";
 import { UserLeague } from "../../../domain/entities/user-league.entity.js";
+import { createUserLeagueSchema } from "../../../infrastructure/validation/schemas/user-league.schema.js";
+import { validateData } from "../../../infrastructure/validation/zod-validator.js";
 
 // Port for ID generation
 export interface IdGenerator {
@@ -23,8 +25,10 @@ export class CreateUserLeagueUseCase {
     ) { }
 
     async execute(input: CreateLeagueInput): Promise<UserLeague> {
+        const validatedInput = validateData(createUserLeagueSchema, input);
+
         // Verify if a league with that name already exists
-        const existingLeague = await this.userLeagueRepository.getByName(input.name);
+        const existingLeague = await this.userLeagueRepository.getByName(validatedInput.name);
         if (existingLeague) {
             throw new Error('A league with this name already exists');
         }
@@ -32,7 +36,7 @@ export class CreateUserLeagueUseCase {
         // Create new league
         const newLeague = new UserLeague(
             this.idGenerator.generate(),
-            input.name,
+            validatedInput.name,
             this.inviteCodeGenerator.generate(),
             [] // Start with no members
         );

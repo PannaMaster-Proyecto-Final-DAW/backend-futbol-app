@@ -4,6 +4,10 @@ import { Router } from "express";
 // Controller
 import { TeamController } from "../controllers/team.controller.js";
 
+// Validation
+import { validateRequest } from "./middlewares/validate-request.middleware.js";
+import { createTeamSchema, updateTeamSchema } from "../validation/schemas/team.schema.js";
+
 // Use Cases
 import { CreateTeamUseCase } from "../../application/use-cases/team/create.use-case.js";
 import { UpdateTeamUseCase } from "../../application/use-cases/team/update.use-case.js";
@@ -39,13 +43,13 @@ const teamController = new TeamController(
 );
 
 // Routes
-router.post("/", teamController.create);
+router.post("/", validateRequest(createTeamSchema), teamController.create);
 router.get("/", teamController.getAll);
 router.get("/id/:id", teamController.getById);
 router.get("/name/:name", teamController.getByName);
 router.get("/league/:leagueId", teamController.getByLeague);
 router.get("/tier/:tier", teamController.getByTier);
-router.patch("/:id", teamController.update);
+router.patch("/:id", validateRequest(updateTeamSchema), teamController.update);
 router.delete("/:id", teamController.delete);
 
 export { router as teamRouter }

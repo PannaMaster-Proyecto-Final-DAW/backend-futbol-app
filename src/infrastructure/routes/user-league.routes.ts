@@ -3,6 +3,10 @@ import { Router } from 'express';
 
 // Controller
 import { UserLeagueController } from '../controllers/user-league.controller.js';
+
+// Validation
+import { validateRequest } from './middlewares/validate-request.middleware.js';
+import { createUserLeagueSchema, updateUserLeagueSchema } from '../validation/schemas/user-league.schema.js';
 // Use Cases
 import { CreateUserLeagueUseCase } from '../../application/use-cases/user-league/create.use-case.js';
 import { UpdateUserLeagueUseCase } from '../../application/use-cases/user-league/update.use-case.js';
@@ -32,11 +36,11 @@ const userLeagueController = new UserLeagueController(
 );
 
 // Routes
-router.post('/', userLeagueController.create);
+router.post('/', validateRequest(createUserLeagueSchema), userLeagueController.create);
 router.get('/', userLeagueController.getAll);
 router.get('/id/:id', userLeagueController.getById);
 router.get('/name/:name', userLeagueController.getByName);
-router.patch('/:id', userLeagueController.update);
+router.patch('/:id', validateRequest(updateUserLeagueSchema), userLeagueController.update);
 router.delete('/:id', userLeagueController.delete);
 
 export { router as userLeagueRouter };

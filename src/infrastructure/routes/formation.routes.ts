@@ -4,6 +4,10 @@ import { Router } from "express";
 // Controller
 import { FormationController } from "../controllers/formation.controller.js";
 
+// Validation
+import { validateRequest } from "./middlewares/validate-request.middleware.js";
+import { createFormationSchema, updateFormationSchema } from "../validation/schemas/formation.schema.js";
+
 // Use Cases
 import { CreateFormationUseCase } from "../../application/use-cases/formation/create.use-case.js";
 import { GetAllFormationsUseCase } from "../../application/use-cases/formation/get-all.use-case.js";
@@ -33,11 +37,11 @@ const formationController = new FormationController(
 );
 
 // Routes
-router.post("/", formationController.create);
+router.post("/", validateRequest(createFormationSchema), formationController.create);
 router.get("/", formationController.getAll);
 router.get("/id/:id", formationController.getById);
 router.get("/name/:name", formationController.getByName);
-router.patch("/:id", formationController.update);
+router.patch("/:id", validateRequest(updateFormationSchema), formationController.update);
 router.delete("/:id", formationController.delete);
 
 export { router as formationRouter }

@@ -3,6 +3,10 @@ import { Router } from 'express';
 
 // Controller
 import { UserController } from '../controllers/user.controller.js';
+
+// Validation
+import { validateRequest } from './middlewares/validate-request.middleware.js';
+import { createUserSchema, loginUserSchema, updateUserSchema } from '../validation/schemas/user.schema.js';
 // Use Cases
 import { CreateUserUseCase } from '../../application/use-cases/user/create.use-case.js';
 import { UpdateUserUseCase } from '../../application/use-cases/user/update.use-case.js';
@@ -41,14 +45,14 @@ const userController = new UserController(
 );
 
 // Routes
-router.post('/login', userController.login);
-router.post('/', userController.create);
+router.post('/login', validateRequest(loginUserSchema), userController.login);
+router.post('/', validateRequest(createUserSchema), userController.create);
 router.get('/', userController.getAll);
 router.get('/id/:id', userController.getById);
 router.get('/username/:userName', userController.getByUserName);
 router.get('/email/:email', userController.getByEmail);
 router.get('/role/:role', userController.getByRole);
-router.patch('/:id', userController.update);
+router.patch('/:id', validateRequest(updateUserSchema), userController.update);
 router.delete('/:id', userController.delete);
 
 export { router as userRouter };

@@ -3,6 +3,10 @@ import { Router } from 'express';
 
 // Controller
 import { UserLeagueMembershipController } from '../controllers/user-league-membership.controller.js';
+
+// Validation
+import { validateRequest } from './middlewares/validate-request.middleware.js';
+import { createUserLeagueMembershipSchema, updateUserLeagueMembershipSchema, incrementScoreSchema } from '../validation/schemas/user-league-membership.schema.js';
 // Use Cases
 import { CreateUserLeagueMembershipUseCase } from '../../application/use-cases/user-league-membership/create.use-case.js';
 import { UpdateUserLeagueMembershipUseCase } from '../../application/use-cases/user-league-membership/update.use-case.js';
@@ -38,13 +42,13 @@ const controller = new UserLeagueMembershipController(
 );
 
 // Routes
-router.post('/', controller.create);
+router.post('/', validateRequest(createUserLeagueMembershipSchema), controller.create);
 router.get('/id/:id', controller.getById);
 router.get('/user/:userId/league/:leagueId', controller.getByUserAndLeague);
 router.get('/user/:userId', controller.getByUser);
 router.get('/league/:leagueId', controller.getByLeague);
-router.patch('/increment-score/:id', controller.incrementScore);
-router.patch('/:id', controller.update);
+router.patch('/increment-score/:id', validateRequest(incrementScoreSchema), controller.incrementScore);
+router.patch('/:id', validateRequest(updateUserLeagueMembershipSchema), controller.update);
 router.delete('/:id', controller.delete);
 
 export { router as userLeagueMembershipRouter };

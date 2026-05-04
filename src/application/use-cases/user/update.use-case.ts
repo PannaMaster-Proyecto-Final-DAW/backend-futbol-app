@@ -1,6 +1,8 @@
 import { User, UserRole } from "../../../domain/entities/user.entity.js";
 import { UserRepository } from "../../../domain/repositories/user.domain.repository.js";
 import { PasswordHasher } from "../../interfaces/password-hasher.interface.js";
+import { updateUserSchema } from "../../../infrastructure/validation/schemas/user.schema.js";
+import { validateData } from "../../../infrastructure/validation/zod-validator.js";
 
 export interface UpdateInput {
     userName?: string;
@@ -26,23 +28,25 @@ export class UpdateUserUseCase {
      * @returns The updated user entity.*/
 
     async execute(id: string, input: UpdateInput): Promise<User> {
+        const validatedInput = validateData(updateUserSchema, input);
+
         const user = await this.UserRepository.getById(id);
         if (!user) {
             throw new Error('User not found');
         }
 
         //Update only the fields that are present in the input
-        if (input.userName !== undefined) {
-            user.userName = input.userName;
+        if (validatedInput.userName !== undefined) {
+            user.userName = validatedInput.userName;
         }
-        if (input.email !== undefined) {
-            user.email = input.email;
+        if (validatedInput.email !== undefined) {
+            user.email = validatedInput.email;
         }
-        if (input.password !== undefined) {
-            user.password = await this.passwordHasher.hash(input.password); // DONE
+        if (validatedInput.password !== undefined) {
+            user.password = await this.passwordHasher.hash(validatedInput.password); // DONE
         }
-        if (input.role !== undefined) {
-            user.role = input.role;
+        if (validatedInput.role !== undefined) {
+            user.role = validatedInput.role;
         }
 
         return this.UserRepository.update(user);

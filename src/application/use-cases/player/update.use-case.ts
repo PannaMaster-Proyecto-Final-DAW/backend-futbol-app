@@ -2,6 +2,8 @@ import type { PlayerRepository } from "../../../domain/repositories/player.domai
 import { Player, PlayerPosition, PlayerGender } from "../../../domain/entities/player.entity.js";
 import type { TeamRepository } from "../../../domain/repositories/team.domain.repository.js";
 import type { CountryRepository } from "../../../domain/repositories/country.domain.repository.js";
+import { updatePlayerSchema } from "../../../infrastructure/validation/schemas/player.schema.js";
+import { validateData } from "../../../infrastructure/validation/zod-validator.js";
 
 export interface UpdatePlayerInput {
     name?: string;
@@ -37,41 +39,34 @@ export class UpdatePlayerUseCase {
      * @returns The updated Player entity.
      */
     async execute(id: string, input: UpdatePlayerInput): Promise<Player> {
+        const validatedInput = validateData(updatePlayerSchema, input);
+
         const player = await this.playerRepository.getById(id);
         if (!player) {
             throw new Error(`Player with id ${id} not found`);
         }
 
         // We use strict check ( !== undefined ) to allow updates to falsy values
-        if (input.name !== undefined) player.name = input.name;
-        if (input.age !== undefined) {
-            if (input.age < 0) throw new Error('Age cannot be negative');
-            player.age = input.age;
-        }
-        if (input.birthdate !== undefined) {
-            const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
-            if (!dateRegex.test(input.birthdate)) {
-                throw new Error('Birthdate must be in YYYY-MM-DD format');
-            }
-            player.birthdate = input.birthdate;
-        }
-        if (input.position !== undefined) player.position = input.position;
-        if (input.pictureUrl !== undefined) player.pictureUrl = input.pictureUrl;
-        if (input.tier !== undefined) player.tier = input.tier;
-        if (input.gender !== undefined) player.gender = input.gender;
+        if (validatedInput.name !== undefined) player.name = validatedInput.name;
+        if (validatedInput.age !== undefined) player.age = validatedInput.age;
+        if (validatedInput.birthdate !== undefined) player.birthdate = validatedInput.birthdate;
+        if (validatedInput.position !== undefined) player.position = validatedInput.position;
+        if (validatedInput.pictureUrl !== undefined) player.pictureUrl = validatedInput.pictureUrl;
+        if (validatedInput.tier !== undefined) player.tier = validatedInput.tier;
+        if (validatedInput.gender !== undefined) player.gender = validatedInput.gender;
 
-        if (input.teamId !== undefined) {
-            const team = await this.teamRepository.getById(input.teamId);
+        if (validatedInput.teamId !== undefined) {
+            const team = await this.teamRepository.getById(validatedInput.teamId);
             if (!team) {
-                throw new Error(`Team with id ${input.teamId} not found`);
+                throw new Error(`Team with id ${validatedInput.teamId} not found`);
             }
             player.team = team;
         }
 
-        if (input.countryId !== undefined) {
-            const country = await this.countryRepository.getById(input.countryId);
+        if (validatedInput.countryId !== undefined) {
+            const country = await this.countryRepository.getById(validatedInput.countryId);
             if (!country) {
-                throw new Error(`Country with id ${input.countryId} not found`);
+                throw new Error(`Country with id ${validatedInput.countryId} not found`);
             }
             player.country = country;
         }
