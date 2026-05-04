@@ -59,3 +59,21 @@ The type of tasks must be one of the following categories:
 * `test:` Adding missing tests or correcting existing tests.
 
 ---
+
+## 5. Maintenance & Security
+
+### Security Audits
+Avoid using `npm audit fix --force` for critical dependencies like `sequelize` or `sequelize-typescript`. This command can cause major version downgrades that break the application.
+
+* **Manual Fixes:** When vulnerabilities are reported, prioritize manual updates to the latest stable major versions.
+* **Current Stable Stack (May 2026):**
+    * `sequelize`: ^6.37.8
+    * `sequelize-typescript`: ^2.1.6
+    * `uuid`: ^14.0.0
+    * `zod`: ^4.4.3
+    * `pg`: ^8.20.0
+    * `dotenv`: ^17.4.2
+    * `express`: ^5.2.1
+    * `typescript`: ^6.0.3 (v6 support)
+
+If `npm audit` suggests a "breaking change" downgrade to v3 or similar for `sequelize`, ignore the automated fix and maintain the modern v6+ version.
