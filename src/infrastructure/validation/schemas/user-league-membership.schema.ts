@@ -11,5 +11,5 @@ export const updateUserLeagueMembershipSchema = z.object({
 });
 
 export const incrementScoreSchema = z.object({
-    amount: z.number().int().positive("Amount must be positive")
+    pointsToAdd: z.number().int().positive("Points must be positive")
 });
