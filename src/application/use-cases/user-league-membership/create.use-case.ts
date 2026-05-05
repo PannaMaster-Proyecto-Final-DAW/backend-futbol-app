@@ -43,7 +43,9 @@ export class CreateUserLeagueMembershipUseCase {
         const membership = new UserLeagueMembership(
             this.idGenerator.generate(),
             user,
-            league
+            league,
+            0,
+            new Date()
         );
 
         return this.membershipRepository.create(membership);

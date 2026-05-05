@@ -39,26 +39,35 @@ export class UserLeagueMembershipRepositoryImpl implements UserLeagueMembershipR
     }
 
     async getById(id: string): Promise<UserLeagueMembership | null> {
-        const model = await UserLeagueMembershipModel.findByPk(id);
+        const model = await UserLeagueMembershipModel.findByPk(id, {
+            include: ['league', 'user']
+        });
         if (!model) return null;
         return this.toEntity(model);
     }
 
     async getByUserIdAndLeagueId(userId: string, leagueId: string): Promise<UserLeagueMembership | null> {
         const model = await UserLeagueMembershipModel.findOne({
-            where: { userId, userLeagueId: leagueId }
+            where: { userId, userLeagueId: leagueId },
+            include: ['league', 'user']
         });
         if (!model) return null;
         return this.toEntity(model);
     }
 
     async getByUserId(userId: string): Promise<UserLeagueMembership[]> {
-        const models = await UserLeagueMembershipModel.findAll({ where: { userId } });
+        const models = await UserLeagueMembershipModel.findAll({ 
+            where: { userId },
+            include: ['league', 'user']
+        });
         return models.map(m => this.toEntity(m));
     }
 
     async getByLeagueId(leagueId: string): Promise<UserLeagueMembership[]> {
-        const models = await UserLeagueMembershipModel.findAll({ where: { userLeagueId: leagueId } });
+        const models = await UserLeagueMembershipModel.findAll({ 
+            where: { userLeagueId: leagueId },
+            include: ['league', 'user']
+        });
         return models.map(m => this.toEntity(m));
     }
 
@@ -70,7 +79,9 @@ export class UserLeagueMembershipRepositoryImpl implements UserLeagueMembershipR
         if (!model) throw new Error('Membership not found');
 
         await model.increment('score', { by: score });
-        await model.reload();
+        await model.reload({
+            include: ['league', 'user']
+        });
 
         return this.toEntity(model);
     }
@@ -90,7 +101,8 @@ export class UserLeagueMembershipRepositoryImpl implements UserLeagueMembershipR
             model.id,
             user,
             league,
-            model.score
+            model.score,
+            (model as any).createdAt // Sequelize dynamic field
         );
     }
 }
