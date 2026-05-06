@@ -88,6 +88,12 @@ export class PlayerModel extends Model {
     defaultValue: 'male',
   })
   declare gender: string;
+
+  @Column({
+    type: DataType.ENUM('GOALKEEPER', 'DEFENDER', 'MIDFIELDER', 'FORWARD'),
+    allowNull: false,
+  })
+  declare generalPosition: string;
 }
 
 export default PlayerModel;

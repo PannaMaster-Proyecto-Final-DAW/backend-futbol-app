@@ -8,7 +8,7 @@ import { GetPlayerByNameUseCase } from "../../application/use-cases/player/get-b
 import { SearchPlayersUseCase } from "../../application/use-cases/player/search-players.use-case.js";
 import { GetPlayersByTierUseCase } from "../../application/use-cases/player/get-by-tier.use-case.js";
 import { GetPlayersByGenderUseCase } from "../../application/use-cases/player/get-by-gender.use-case.js";
-import { PlayerPosition, PlayerGender } from "../../domain/entities/player.entity.js";
+import { PlayerPosition, PlayerGender, GeneralPosition } from "../../domain/entities/player.entity.js";
 
 export class PlayerController {
     constructor(
@@ -36,7 +36,7 @@ export class PlayerController {
     // Create a new player
     async create(req: Request, res: Response): Promise<void> {
         try {
-            const { name, age, birthdate, position, teamId, countryId, pictureUrl, tier, gender } = req.body;
+            const { name, age, birthdate, position, teamId, countryId, pictureUrl, tier, gender, generalPosition } = req.body;
             const player = await this.createPlayerUseCase.execute({
                 name,
                 age,
@@ -46,7 +46,8 @@ export class PlayerController {
                 countryId,
                 pictureUrl,
                 tier,
-                gender
+                gender,
+                generalPosition
             });
             res.status(201).json(player);
         } catch (error: any) {
@@ -58,7 +59,7 @@ export class PlayerController {
     async update(req: Request, res: Response): Promise<void> {
         try {
             const id = req.params.id as string;
-            const { name, age, birthdate, position, teamId, countryId, pictureUrl, tier, gender } = req.body;
+            const { name, age, birthdate, position, teamId, countryId, pictureUrl, tier, gender, generalPosition } = req.body;
             const player = await this.updatePlayerUseCase.execute(id, {
                 name,
                 age,
@@ -68,7 +69,8 @@ export class PlayerController {
                 countryId,
                 pictureUrl,
                 tier,
-                gender
+                gender,
+                generalPosition
             });
             res.status(200).json(player);
         } catch (error: any) {
