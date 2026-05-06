@@ -1,5 +1,5 @@
 import type { PlayerRepository } from "../../../domain/repositories/player.domain.repository.js";
-import { Player, PlayerPosition, PlayerGender } from "../../../domain/entities/player.entity.js";
+import { Player, PlayerPosition, PlayerGender, GeneralPosition } from "../../../domain/entities/player.entity.js";
 import type { TeamRepository } from "../../../domain/repositories/team.domain.repository.js";
 import type { CountryRepository } from "../../../domain/repositories/country.domain.repository.js";
 import { updatePlayerSchema } from "../../../infrastructure/validation/schemas/player.schema.js";
@@ -15,6 +15,7 @@ export interface UpdatePlayerInput {
     pictureUrl?: string;
     tier?: number;
     gender?: PlayerGender;
+    generalPosition?: GeneralPosition;
 }
 
 /**
@@ -54,6 +55,7 @@ export class UpdatePlayerUseCase {
         if (validatedInput.pictureUrl !== undefined) player.pictureUrl = validatedInput.pictureUrl;
         if (validatedInput.tier !== undefined) player.tier = validatedInput.tier;
         if (validatedInput.gender !== undefined) player.gender = validatedInput.gender;
+        if (validatedInput.generalPosition !== undefined) player.generalPosition = validatedInput.generalPosition;
 
         if (validatedInput.teamId !== undefined) {
             const team = await this.teamRepository.getById(validatedInput.teamId);

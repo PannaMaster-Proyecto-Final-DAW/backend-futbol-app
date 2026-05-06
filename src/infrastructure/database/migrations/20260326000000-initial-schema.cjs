@@ -340,6 +340,10 @@ module.exports = {
         allowNull: false,
         type: Sequelize.DATE,
       },
+      generalPosition: {
+        type: Sequelize.ENUM('GOALKEEPER', 'DEFENDER', 'MIDFIELDER', 'FORWARD'),
+        allowNull: false,
+      },
     });
   },
 
@@ -359,5 +363,6 @@ module.exports = {
     await queryInterface.sequelize.query('DROP TYPE IF EXISTS "enum_users_role";');
     await queryInterface.sequelize.query('DROP TYPE IF EXISTS "enum_leagues_category";');
     await queryInterface.sequelize.query('DROP TYPE IF EXISTS "enum_players_gender";');
+    await queryInterface.sequelize.query('DROP TYPE IF EXISTS "enum_players_generalPosition";');
   },
 };

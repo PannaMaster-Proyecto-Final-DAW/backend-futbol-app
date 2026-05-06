@@ -1,4 +1,4 @@
-import { Player, PlayerPosition, PlayerGender } from "../../../domain/entities/player.entity.js";
+import { Player, PlayerPosition, PlayerGender, GeneralPosition } from "../../../domain/entities/player.entity.js";
 import { createPlayerSchema } from "../../../infrastructure/validation/schemas/player.schema.js";
 import { validateData } from "../../../infrastructure/validation/zod-validator.js";
 import type { PlayerRepository } from "../../../domain/repositories/player.domain.repository.js";
@@ -21,6 +21,7 @@ export interface CreatePlayerInput {
     pictureUrl?: string;
     tier?: number;
     gender: PlayerGender;
+    generalPosition: GeneralPosition;
 }
 
 // Use Case to create a new player
@@ -58,6 +59,7 @@ export class CreatePlayerUseCase {
             validatedInput.age,
             validatedInput.birthdate,
             validatedInput.position,
+            validatedInput.generalPosition,
             team,
             country,
             validatedInput.pictureUrl || '',

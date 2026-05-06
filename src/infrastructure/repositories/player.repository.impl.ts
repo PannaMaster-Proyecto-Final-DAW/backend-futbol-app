@@ -1,4 +1,4 @@
-import { Player, PlayerPosition, PlayerGender } from '../../domain/entities/player.entity.js';
+import { Player, PlayerPosition, PlayerGender, GeneralPosition } from '../../domain/entities/player.entity.js';
 import { Team } from '../../domain/entities/team.entity.js';
 import { Country } from '../../domain/entities/country.entity.js';
 import type { PlayerRepository } from '../../domain/repositories/player.domain.repository.js';
@@ -23,7 +23,8 @@ export class PlayerRepositoryImpl implements PlayerRepository {
             countryId: player.country.id,
             pictureUrl: player.pictureUrl,
             tier: player.tier,
-            gender: player.gender
+            gender: player.gender,
+            generalPosition: player.generalPosition
         });
 
         const created = await this.getById(newPlayer.id);
@@ -46,6 +47,7 @@ export class PlayerRepositoryImpl implements PlayerRepository {
         if (player.pictureUrl !== undefined) updateData.pictureUrl = player.pictureUrl;
         if (player.tier !== undefined) updateData.tier = player.tier;
         if (player.gender !== undefined) updateData.gender = player.gender;
+        if (player.generalPosition !== undefined) updateData.generalPosition = player.generalPosition;
 
         const [affectedCount] = await PlayerModel.update(updateData, {
             where: { id }
@@ -212,6 +214,7 @@ export class PlayerRepositoryImpl implements PlayerRepository {
             model.age,
             model.birthdate,
             model.position as PlayerPosition[],
+            model.generalPosition as GeneralPosition,
             team,
             country,
             model.pictureUrl,

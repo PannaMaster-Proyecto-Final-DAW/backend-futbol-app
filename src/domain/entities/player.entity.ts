@@ -29,6 +29,13 @@ export enum PlayerGender {
     FEMALE = 'female'
 }
 
+export enum GeneralPosition {
+    GOALKEEPER = 'GOALKEEPER',
+    DEFENDER = 'DEFENDER',
+    MIDFIELDER = 'MIDFIELDER',
+    FORWARD = 'FORWARD'
+}
+
 export class Player {
     constructor(
         public id: string, // UUID
@@ -36,6 +43,7 @@ export class Player {
         public age: number,
         public birthdate: string, // Format: YYYY-MM-DD
         public position: PlayerPosition[],
+        public generalPosition: GeneralPosition,
         public team: Team, // Ref Team
         public country: Country, // Ref Country
         public pictureUrl: string,
