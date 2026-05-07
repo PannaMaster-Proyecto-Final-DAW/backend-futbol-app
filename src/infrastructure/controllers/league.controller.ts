@@ -8,6 +8,7 @@ import { GetLeagueByCategoryUseCase } from "../../application/use-cases/league/g
 import { UpdateLeagueUseCase } from "../../application/use-cases/league/update.use-case.js";
 import { DeleteLeagueUseCase } from "../../application/use-cases/league/delete.use-case.js";
 import { LeagueCategory } from "../../domain/entities/league.entity.js";
+import { LeagueMapper } from "../mappers/league.mapper.js";
 
 export class LeagueController {
     constructor(
@@ -48,7 +49,7 @@ export class LeagueController {
                 category,
                 pictureUrl
             });
-            res.status(201).json(league);
+            res.status(201).json(LeagueMapper.toResponse(league));
         } catch (error: any) {
             res.status(400).json({ error: error.message });
         }
@@ -57,7 +58,7 @@ export class LeagueController {
     async getAll(_req: Request, res: Response): Promise<void> {
         try {
             const leagues = await this.getAllLeagueUseCase.execute();
-            res.status(200).json(leagues);
+            res.status(200).json(LeagueMapper.toResponseList(leagues));
         } catch (error: any) {
             res.status(500).json({ error: error.message });
         }
@@ -71,7 +72,11 @@ export class LeagueController {
                 return;
             }
             const league = await this.getLeagueByIdUseCase.execute({ id });
-            res.status(200).json(league);
+            if (!league) {
+                res.status(404).json({ error: "League not found" });
+                return;
+            }
+            res.status(200).json(LeagueMapper.toResponse(league));
         } catch (error: any) {
             res.status(404).json({ error: error.message });
         }
@@ -85,7 +90,11 @@ export class LeagueController {
                 return;
             }
             const league = await this.getLeagueByNameUseCase.execute({ name });
-            res.status(200).json(league);
+            if (!league) {
+                res.status(404).json({ error: "League not found" });
+                return;
+            }
+            res.status(200).json(LeagueMapper.toResponse(league));
         } catch (error: any) {
             res.status(404).json({ error: error.message });
         }
@@ -99,7 +108,7 @@ export class LeagueController {
                 return;
             }
             const leagues = await this.getLeagueByCountryUseCase.execute({ countryId });
-            res.status(200).json(leagues);
+            res.status(200).json(LeagueMapper.toResponseList(leagues));
         } catch (error: any) {
             res.status(400).json({ error: error.message });
         }
@@ -113,7 +122,7 @@ export class LeagueController {
                 return;
             }
             const leagues = await this.getLeagueByCategoryUseCase.execute({ category: category as LeagueCategory });
-            res.status(200).json(leagues);
+            res.status(200).json(LeagueMapper.toResponseList(leagues));
         } catch (error: any) {
             res.status(400).json({ error: error.message });
         }
@@ -128,7 +137,11 @@ export class LeagueController {
                 return;
             }
             const league = await this.updateLeagueUseCase.execute({ id, name, countryId: country, category, pictureUrl });
-            res.status(200).json(league);
+            if (!league) {
+                res.status(404).json({ error: "League not found" });
+                return;
+            }
+            res.status(200).json(LeagueMapper.toResponse(league));
         } catch (error: any) {
             res.status(400).json({ error: error.message });
         }

@@ -7,6 +7,7 @@ import { GetTeamByIdUseCase } from "../../application/use-cases/team/get-by-id.u
 import { GetTeamByNameUseCase } from "../../application/use-cases/team/get-by-name.use-case.js";
 import { GetTeamsByLeagueUseCase } from "../../application/use-cases/team/get-by-league.use-case.js";
 import { GetTeamByTierUseCase } from "../../application/use-cases/team/get-by-tier.use-case.js";
+import { TeamMapper } from "../mappers/team.mapper.js";
 
 export class TeamController {
     constructor(
@@ -41,7 +42,7 @@ export class TeamController {
             }
 
             const team = await this.createTeamUseCase.execute({ name, leagueId: finalLeagueId, pictureUrl, tier });
-            res.status(201).json(team);
+            res.status(201).json(TeamMapper.toResponse(team));
         } catch (error: any) {
             res.status(400).json({ error: error.message });
         }
@@ -65,7 +66,7 @@ export class TeamController {
                 res.status(404).json({ error: "Team not found" });
                 return;
             }
-            res.status(200).json(team);
+            res.status(200).json(TeamMapper.toResponse(team));
         } catch (error: any) {
             res.status(400).json({ error: error.message });
         }
@@ -88,7 +89,7 @@ export class TeamController {
     async getAll(_req: Request, res: Response): Promise<void> {
         try {
             const teams = await this.getAllTeamUseCase.execute();
-            res.status(200).json(teams);
+            res.status(200).json(TeamMapper.toResponseList(teams));
         } catch (error: any) {
             res.status(500).json({ error: error.message });
         }
@@ -102,7 +103,7 @@ export class TeamController {
                 res.status(404).json({ error: "Id not found" });
                 return;
             }
-            res.status(200).json(team);
+            res.status(200).json(TeamMapper.toResponse(team));
         } catch (error: any) {
             res.status(404).json({ error: error.message });
         }
@@ -116,7 +117,7 @@ export class TeamController {
                 res.status(404).json({ error: "Name not found" });
                 return;
             }
-            res.status(200).json(team);
+            res.status(200).json(TeamMapper.toResponse(team));
         } catch (error: any) {
             res.status(404).json({ error: error.message });
         }
@@ -126,7 +127,7 @@ export class TeamController {
         try {
             const leagueId = req.params.leagueId as string;
             const teams = await this.getTeamsByLeagueUseCase.execute({ leagueId });
-            res.status(200).json(teams);
+            res.status(200).json(TeamMapper.toResponseList(teams));
         } catch (error: any) {
             res.status(400).json({ error: error.message });
         }
@@ -139,7 +140,7 @@ export class TeamController {
                 throw new Error("Tier must be a number");
             }
             const teams = await this.getTeamByTierUseCase.execute({ tier });
-            res.status(200).json(teams);
+            res.status(200).json(TeamMapper.toResponseList(teams));
         } catch (error: any) {
             res.status(400).json({ error: error.message });
         }
