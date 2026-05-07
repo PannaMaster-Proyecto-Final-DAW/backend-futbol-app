@@ -1,8 +1,13 @@
 import { Country } from '../../domain/entities/country.entity.js';
 import type { CountryRepository } from '../../domain/repositories/country.domain.repository.js';
 import { CountryModel } from '../models/country.model.js';
+import { CacheService } from '../services/cache.service.js';
+
 
 export class CountryRepositoryImpl implements CountryRepository {
+    
+    constructor(private readonly cacheService?: CacheService) {}
+
     /**
      * Create a new country and persist it to the database.
      * Re-fetches the country from the database after creation to ensure all
@@ -19,11 +24,17 @@ export class CountryRepositoryImpl implements CountryRepository {
 
         const created = await this.getById(newCountry.id);
         if (!created) throw new Error('Error creating country');
+        
+        if (this.cacheService) {
+            await this.cacheService.del('countries:all');
+        }
+
         return created;
     }
 
     /**
      * Update an existing country.
+
      * Performs a partial update and returns the fully reconstructed entity.
      */
     async update(country: Country): Promise<Country> {
@@ -47,33 +58,65 @@ export class CountryRepositoryImpl implements CountryRepository {
         const updated = await this.getById(country.id);
         if (!updated) throw new Error('Country not found after update');
 
+        if (this.cacheService) {
+            await this.cacheService.del('countries:all');
+            await this.cacheService.del(`countries:id:${country.id}`);
+        }
+
         return updated;
     }
 
     /**
      * Delete a country from the database by its ID.
+
      */
     async delete(id: string): Promise<boolean> {
         const deletedCount = await CountryModel.destroy({ where: { id } });
+        
+        if (deletedCount > 0 && this.cacheService) {
+            await this.cacheService.del('countries:all');
+            await this.cacheService.del(`countries:id:${id}`);
+        }
+
         return deletedCount > 0;
     }
 
     /**
      * Retrieve all countries from the database.
+
      */
     async getAll(): Promise<Country[]> {
-        const models = await CountryModel.findAll();
-        return models.map(m => this.toEntity(m));
+        if (!this.cacheService) {
+            const models = await CountryModel.findAll();
+            return models.map(m => this.toEntity(m));
+        }
+
+        return await this.cacheService.wrap('countries:all', async () => {
+            console.log('[Cache Miss] Fetching all countries from DB');
+            const models = await CountryModel.findAll();
+            return models.map(m => this.toEntity(m));
+        }, 86400000); // 24 hours cache for countries
     }
+
 
     /**
      * Find a country by its unique ID.
      */
     async getById(id: string): Promise<Country | null> {
-        const model = await CountryModel.findByPk(id);
-        if (!model) return null;
-        return this.toEntity(model);
+        if (!this.cacheService) {
+            const model = await CountryModel.findByPk(id);
+            if (!model) return null;
+            return this.toEntity(model);
+        }
+
+        return await this.cacheService.wrap(`countries:id:${id}`, async () => {
+            console.log(`[Cache Miss] Fetching country ${id} from DB`);
+            const model = await CountryModel.findByPk(id);
+            if (!model) return null;
+            return this.toEntity(model);
+        }, 86400000); // 24 hours cache
     }
+
 
     /**
      * Find a country by its name.

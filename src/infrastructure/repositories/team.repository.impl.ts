@@ -2,8 +2,13 @@ import { Team } from '../../domain/entities/team.entity.js';
 import { League } from '../../domain/entities/league.entity.js';
 import type { TeamRepository } from '../../domain/repositories/team.domain.repository.js';
 import { TeamModel } from '../models/team.model.js';
+import { CacheService } from '../services/cache.service.js';
+
 
 export class TeamRepositoryImpl implements TeamRepository {
+    
+    constructor(private readonly cacheService?: CacheService) {}
+
     
     /**
      * Create a new team and persist it to the database.
@@ -19,11 +24,17 @@ export class TeamRepositoryImpl implements TeamRepository {
 
         const created = await this.getById(newTeam.id);
         if (!created) throw new Error('Error creating team');
+        
+        if (this.cacheService) {
+            await this.cacheService.del('teams:all');
+        }
+
         return created;
     }
 
     /**
      * Update an existing team.
+
      */
     async update(id: string, team: Team): Promise<Team | null> {
         const updateData: any = {};
@@ -39,7 +50,13 @@ export class TeamRepositoryImpl implements TeamRepository {
 
         if (affectedCount === 0) return null;
 
+        if (this.cacheService) {
+            await this.cacheService.del('teams:all');
+            await this.cacheService.del(`teams:id:${id}`);
+        }
+
         return this.getById(id);
+
     }
 
     /**
@@ -47,25 +64,51 @@ export class TeamRepositoryImpl implements TeamRepository {
      */
     async delete(id: string): Promise<boolean> {
         const deletedCount = await TeamModel.destroy({ where: { id } });
+        
+        if (deletedCount > 0 && this.cacheService) {
+            await this.cacheService.del('teams:all');
+            await this.cacheService.del(`teams:id:${id}`);
+        }
+
         return deletedCount > 0;
     }
 
     /**
      * Retrieve all teams from the database.
+
      */
     async getAll(): Promise<Team[]> {
-        const models = await TeamModel.findAll();
-        return models.map(m => this.toEntity(m));
+        if (!this.cacheService) {
+            const models = await TeamModel.findAll();
+            return models.map(m => this.toEntity(m));
+        }
+
+        return await this.cacheService.wrap('teams:all', async () => {
+            console.log('[Cache Miss] Fetching all teams from DB');
+            const models = await TeamModel.findAll();
+            return models.map(m => this.toEntity(m));
+        }, 3600000); // 1 hour cache
     }
+
 
     /**
      * Find a team by its unique ID.
      */
     async getById(id: string): Promise<Team | null> {
-        const model = await TeamModel.findByPk(id);
-        if (!model) return null;
-        return this.toEntity(model);
+        if (!this.cacheService) {
+            const model = await TeamModel.findByPk(id);
+            if (!model) return null;
+            return this.toEntity(model);
+        }
+
+        return await this.cacheService.wrap(`teams:id:${id}`, async () => {
+            console.log(`[Cache Miss] Fetching team ${id} from DB`);
+            const model = await TeamModel.findByPk(id);
+            if (!model) return null;
+            return this.toEntity(model);
+        }, 3600000); // 1 hour cache
     }
+
 
     /**
      * Find a team by its name.

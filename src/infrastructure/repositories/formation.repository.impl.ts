@@ -2,8 +2,13 @@ import { Formation } from '../../domain/entities/formation.entity.js';
 import { PlayerPosition } from '../../domain/entities/player.entity.js';
 import type { FormationRepository } from '../../domain/repositories/formation.domain.repository.js';
 import { FormationModel } from '../models/formation.model.js';
+import { CacheService } from '../services/cache.service.js';
+
 
 export class FormationRepositoryImpl implements FormationRepository {
+    
+    constructor(private readonly cacheService?: CacheService) {}
+
     /**
      * Creates a new formation and persists it to the database.
      * Re-fetches the record after creation to include all DB-generated values.
@@ -20,11 +25,17 @@ export class FormationRepositoryImpl implements FormationRepository {
 
         const created = await this.getById(formation.id);
         if (!created) throw new Error('Error creating formation');
+        
+        if (this.cacheService) {
+            await this.cacheService.del('formations:all');
+        }
+
         return created;
     }
 
     /**
      * Partially updates an existing formation.
+
      * Returns null if no row was affected (formation not found).
      */
     async update(id: string, formation: Partial<Formation>): Promise<Formation | null> {
@@ -48,33 +59,66 @@ export class FormationRepositoryImpl implements FormationRepository {
 
         if (affectedCount === 0) return null;
 
+        if (this.cacheService) {
+            await this.cacheService.del('formations:all');
+            await this.cacheService.del(`formations:id:${id}`);
+        }
+
         return this.getById(id);
     }
 
     /**
      * Deletes a formation by its ID.
+
+
      */
     async delete(id: string): Promise<boolean> {
         const deletedCount = await FormationModel.destroy({ where: { id } });
+        
+        if (deletedCount > 0 && this.cacheService) {
+            await this.cacheService.del('formations:all');
+            await this.cacheService.del(`formations:id:${id}`);
+        }
+
         return deletedCount > 0;
     }
 
     /**
      * Retrieves all formations from the database.
+
      */
     async getAll(): Promise<Formation[]> {
-        const models = await FormationModel.findAll();
-        return models.map(m => this.toEntity(m));
+        if (!this.cacheService) {
+            const models = await FormationModel.findAll();
+            return models.map(m => this.toEntity(m));
+        }
+
+        return await this.cacheService.wrap('formations:all', async () => {
+            console.log('[Cache Miss] Fetching all formations from DB');
+            const models = await FormationModel.findAll();
+            return models.map(m => this.toEntity(m));
+        }, 86400000); // 24 hours cache
     }
+
 
     /**
      * Finds a formation by its unique ID.
      */
     async getById(id: string): Promise<Formation | null> {
-        const model = await FormationModel.findByPk(id);
-        if (!model) return null;
-        return this.toEntity(model);
+        if (!this.cacheService) {
+            const model = await FormationModel.findByPk(id);
+            if (!model) return null;
+            return this.toEntity(model);
+        }
+
+        return await this.cacheService.wrap(`formations:id:${id}`, async () => {
+            console.log(`[Cache Miss] Fetching formation ${id} from DB`);
+            const model = await FormationModel.findByPk(id);
+            if (!model) return null;
+            return this.toEntity(model);
+        }, 86400000); // 24 hours cache
     }
+
 
     /**
      * Finds a formation by its name (case-sensitive).

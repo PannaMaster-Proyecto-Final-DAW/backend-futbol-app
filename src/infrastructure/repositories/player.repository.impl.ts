@@ -6,8 +6,13 @@ import { PlayerModel } from '../models/player.model.js';
 import { TeamModel } from '../models/team.model.js';
 import { CountryModel } from '../models/country.model.js';
 import { Op } from 'sequelize';
+import { CacheService } from '../services/cache.service.js';
+
 
 export class PlayerRepositoryImpl implements PlayerRepository {
+    
+    constructor(private readonly cacheService?: CacheService) {}
+
     
     /**
      * Create a new player and persist it to the database.
@@ -29,11 +34,17 @@ export class PlayerRepositoryImpl implements PlayerRepository {
 
         const created = await this.getById(newPlayer.id);
         if (!created) throw new Error('Error creating player');
+        
+        if (this.cacheService) {
+            await this.cacheService.del('players:all');
+        }
+
         return created;
     }
 
     /**
      * Update an existing player.
+
      */
     async update(id: string, player: Player): Promise<Player | null> {
         const updateData: any = {};
@@ -55,7 +66,13 @@ export class PlayerRepositoryImpl implements PlayerRepository {
 
         if (affectedCount === 0) return null;
 
+        if (this.cacheService) {
+            await this.cacheService.del('players:all');
+            await this.cacheService.del(`players:id:${id}`);
+        }
+
         return this.getById(id);
+
     }
 
     /**
@@ -63,25 +80,51 @@ export class PlayerRepositoryImpl implements PlayerRepository {
      */
     async delete(id: string): Promise<boolean> {
         const deletedCount = await PlayerModel.destroy({ where: { id } });
+        
+        if (deletedCount > 0 && this.cacheService) {
+            await this.cacheService.del('players:all');
+            await this.cacheService.del(`players:id:${id}`);
+        }
+
         return deletedCount > 0;
     }
 
     /**
      * Retrieve all players from the database.
+
      */
     async getAll(): Promise<Player[]> {
-        const models = await PlayerModel.findAll({ include: [TeamModel, CountryModel] });
-        return models.map(m => this.toEntity(m));
+        if (!this.cacheService) {
+            const models = await PlayerModel.findAll({ include: [TeamModel, CountryModel] });
+            return models.map(m => this.toEntity(m));
+        }
+
+        return await this.cacheService.wrap('players:all', async () => {
+            console.log('[Cache Miss] Fetching all players from DB');
+            const models = await PlayerModel.findAll({ include: [TeamModel, CountryModel] });
+            return models.map(m => this.toEntity(m));
+        }, 300000); // 5 minutes cache
     }
+
 
     /**
      * Find a player by its unique ID.
      */
     async getById(id: string): Promise<Player | null> {
-        const model = await PlayerModel.findByPk(id, { include: [TeamModel, CountryModel] });
-        if (!model) return null;
-        return this.toEntity(model);
+        if (!this.cacheService) {
+            const model = await PlayerModel.findByPk(id, { include: [TeamModel, CountryModel] });
+            if (!model) return null;
+            return this.toEntity(model);
+        }
+
+        return await this.cacheService.wrap(`players:id:${id}`, async () => {
+            console.log(`[Cache Miss] Fetching player ${id} from DB`);
+            const model = await PlayerModel.findByPk(id, { include: [TeamModel, CountryModel] });
+            if (!model) return null;
+            return this.toEntity(model);
+        }, 60000); // 1 minute cache
     }
+
 
     /**
      * Find a player by its name.
