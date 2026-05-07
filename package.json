@@ -18,6 +18,7 @@
     "homepage": "https://github.com/PannaMaster-Proyecto-Final-DAW/backend-futbol-app#readme",
     "dependencies": {
         "bcryptjs": "^3.0.3",
+        "cache-manager": "^7.2.8",
         "cors": "^2.8.6",
         "dotenv": "^17.4.2",
         "express": "^5.2.1",

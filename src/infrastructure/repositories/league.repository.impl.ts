@@ -2,8 +2,13 @@ import { League, LeagueCategory } from '../../domain/entities/league.entity.js';
 import { Country } from '../../domain/entities/country.entity.js';
 import type { LeagueRepository } from '../../domain/repositories/league.domain.repository.js';
 import { LeagueModel } from '../models/league.model.js';
+import { CacheService } from '../services/cache.service.js';
+
 
 export class LeagueRepositoryImpl implements LeagueRepository {
+    
+    constructor(private readonly cacheService?: CacheService) {}
+
 
     /**
      * Create a new league and persist it to the database.
@@ -19,11 +24,17 @@ export class LeagueRepositoryImpl implements LeagueRepository {
 
         const created = await this.getById(newLeague.id);
         if (!created) throw new Error('Error creating league');
+        
+        if (this.cacheService) {
+            await this.cacheService.del('leagues:all');
+        }
+
         return created;
     }
 
     /**
      * Update an existing league.
+
      */
     async update(id: string, league: League): Promise<League | null> {
         const updateData: any = {};
@@ -39,7 +50,13 @@ export class LeagueRepositoryImpl implements LeagueRepository {
 
         if (affectedCount === 0) return null;
 
+        if (this.cacheService) {
+            await this.cacheService.del('leagues:all');
+            await this.cacheService.del(`leagues:id:${id}`);
+        }
+
         return this.getById(id);
+
     }
 
     /**
@@ -47,25 +64,51 @@ export class LeagueRepositoryImpl implements LeagueRepository {
      */
     async delete(id: string): Promise<boolean> {
         const deletedCount = await LeagueModel.destroy({ where: { id } });
+        
+        if (deletedCount > 0 && this.cacheService) {
+            await this.cacheService.del('leagues:all');
+            await this.cacheService.del(`leagues:id:${id}`);
+        }
+
         return deletedCount > 0;
     }
 
     /**
      * Retrieve all leagues from the database.
+
      */
     async getAll(): Promise<League[]> {
-        const models = await LeagueModel.findAll();
-        return models.map(m => this.toEntity(m));
+        if (!this.cacheService) {
+            const models = await LeagueModel.findAll();
+            return models.map(m => this.toEntity(m));
+        }
+
+        return await this.cacheService.wrap('leagues:all', async () => {
+            console.log('[Cache Miss] Fetching all leagues from DB');
+            const models = await LeagueModel.findAll();
+            return models.map(m => this.toEntity(m));
+        }, 3600000); // 1 hour cache
     }
+
 
     /**
      * Find a league by its unique ID.
      */
     async getById(id: string): Promise<League | null> {
-        const model = await LeagueModel.findByPk(id);
-        if (!model) return null;
-        return this.toEntity(model);
+        if (!this.cacheService) {
+            const model = await LeagueModel.findByPk(id);
+            if (!model) return null;
+            return this.toEntity(model);
+        }
+
+        return await this.cacheService.wrap(`leagues:id:${id}`, async () => {
+            console.log(`[Cache Miss] Fetching league ${id} from DB`);
+            const model = await LeagueModel.findByPk(id);
+            if (!model) return null;
+            return this.toEntity(model);
+        }, 3600000); // 1 hour cache
     }
+
 
     /**
      * Find a league by its name.

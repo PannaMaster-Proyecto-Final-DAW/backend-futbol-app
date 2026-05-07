@@ -35,26 +35,31 @@ import { UserLeagueMembershipRepositoryImpl } from "./repositories/user-league-m
 import { BcryptPasswordHasher } from './services/bcrypt-password.hasher.js';
 import { UuidIdGenerator } from './services/uuid-id.generator.js';
 import { UuidInviteCodeGenerator } from './services/invite-code.generator.js';
+import { CacheService } from './services/cache.service.js';
+
 
 // ============================================================================
 //                                INSTANCES
 // ============================================================================
 
+// --- Service Instances ---
+const passwordHasher = new BcryptPasswordHasher();
+const idGenerator = new UuidIdGenerator();
+const inviteCodeGenerator = new UuidInviteCodeGenerator();
+const cacheService = new CacheService();
+
 // --- Repository Instances ---
-const countryRepository = new CountryRepositoryImpl();
-const formationRepository = new FormationRepositoryImpl();
-const leagueRepository = new LeagueRepositoryImpl();
-const teamRepository = new TeamRepositoryImpl();
-const playerRepository = new PlayerRepositoryImpl();
+const countryRepository = new CountryRepositoryImpl(cacheService);
+const formationRepository = new FormationRepositoryImpl(cacheService);
+const leagueRepository = new LeagueRepositoryImpl(cacheService);
+const teamRepository = new TeamRepositoryImpl(cacheService);
+const playerRepository = new PlayerRepositoryImpl(cacheService);
 
 const userRepository = new UserRepositoryImpl();
 const userLeagueRepository = new UserLeagueRepositoryImpl();
 const userLeagueMembershipRepository = new UserLeagueMembershipRepositoryImpl();
 
-// --- Service Instances ---
-const passwordHasher = new BcryptPasswordHasher();
-const idGenerator = new UuidIdGenerator();
-const inviteCodeGenerator = new UuidInviteCodeGenerator();
+
 
 // ============================================================================
 //                                 EXPORTS
@@ -71,5 +76,7 @@ export {
     playerRepository,
     passwordHasher,
     idGenerator,
-    inviteCodeGenerator
+    inviteCodeGenerator,
+    cacheService
 };
+
