@@ -8,6 +8,7 @@ export class TeamMapper {
             tier: team.tier,
             pictureUrl: team.pictureUrl || null,
             league: team.league?.name || null,
+            gender: team.league?.category || null,
             country: team.league?.country?.name || null
         };
     }
