@@ -30,11 +30,13 @@ const sequelize = new Sequelize({
             require: true,
             rejectUnauthorized: false,
         },
+        prepareStatements: false,
     },
 });
 
 export const connectDB = async () => {
     try {
+        console.log('Attempting to connect to the database...');
         await sequelize.authenticate();
         console.log('Database connected successfully');
     } catch (error) {

@@ -5,6 +5,8 @@ import type { PlayerRepository } from '../../domain/repositories/player.domain.r
 import { PlayerModel } from '../models/player.model.js';
 import { TeamModel } from '../models/team.model.js';
 import { CountryModel } from '../models/country.model.js';
+import { LeagueModel } from '../models/league.model.js';
+import { League } from '../../domain/entities/league.entity.js';
 import { Op } from 'sequelize';
 import { CacheService } from '../services/cache.service.js';
 
@@ -94,14 +96,19 @@ export class PlayerRepositoryImpl implements PlayerRepository {
 
      */
     async getAll(): Promise<Player[]> {
+        const include = [
+            { model: TeamModel, include: [LeagueModel] },
+            CountryModel
+        ];
+
         if (!this.cacheService) {
-            const models = await PlayerModel.findAll({ include: [TeamModel, CountryModel] });
+            const models = await PlayerModel.findAll({ include });
             return models.map(m => this.toEntity(m));
         }
 
         return await this.cacheService.wrap('players:all', async () => {
             console.log('[Cache Miss] Fetching all players from DB');
-            const models = await PlayerModel.findAll({ include: [TeamModel, CountryModel] });
+            const models = await PlayerModel.findAll({ include });
             return models.map(m => this.toEntity(m));
         }, 300000); // 5 minutes cache
     }
@@ -111,15 +118,20 @@ export class PlayerRepositoryImpl implements PlayerRepository {
      * Find a player by its unique ID.
      */
     async getById(id: string): Promise<Player | null> {
+        const include = [
+            { model: TeamModel, include: [LeagueModel] },
+            CountryModel
+        ];
+
         if (!this.cacheService) {
-            const model = await PlayerModel.findByPk(id, { include: [TeamModel, CountryModel] });
+            const model = await PlayerModel.findByPk(id, { include });
             if (!model) return null;
             return this.toEntity(model);
         }
 
         return await this.cacheService.wrap(`players:id:${id}`, async () => {
             console.log(`[Cache Miss] Fetching player ${id} from DB`);
-            const model = await PlayerModel.findByPk(id, { include: [TeamModel, CountryModel] });
+            const model = await PlayerModel.findByPk(id, { include });
             if (!model) return null;
             return this.toEntity(model);
         }, 60000); // 1 minute cache
@@ -244,7 +256,15 @@ export class PlayerRepositoryImpl implements PlayerRepository {
         if (!model) throw new Error('Player model is null');
 
         const team = model.team 
-            ? new Team(model.team.id, model.team.name, null as any, model.team.pictureUrl, model.team.tier)
+            ? new Team(
+                model.team.id, 
+                model.team.name, 
+                model.team.league 
+                    ? new League(model.team.league.id, model.team.league.name, null as any, model.team.league.category, model.team.league.pictureUrl)
+                    : new League(model.team.leagueId, '', null as any, null as any, ''),
+                model.team.pictureUrl, 
+                model.team.tier
+            )
             : new Team(model.teamId, '', null as any, '', 1);
 
         const country = model.country 

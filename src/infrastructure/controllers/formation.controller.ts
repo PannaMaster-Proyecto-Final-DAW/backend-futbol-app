@@ -5,6 +5,7 @@ import { GetFormationByIdUseCase } from "../../application/use-cases/formation/g
 import { GetFormationByNameUseCase } from "../../application/use-cases/formation/get-by-name.use-case.js";
 import { UpdateFormationUseCase } from "../../application/use-cases/formation/update.use-case.js";
 import { DeleteFormationUseCase } from "../../application/use-cases/formation/delete.use-case.js";
+import { FormationMapper } from "../mappers/formation.mapper.js";
 
 export class FormationController {
     /**
@@ -46,7 +47,7 @@ export class FormationController {
                 positionsList
             });
 
-            res.status(201).json(formation);
+            res.status(201).json(FormationMapper.toResponse(formation));
         } catch (error: any) {
             res.status(400).json({ error: error.message });
         }
@@ -56,7 +57,7 @@ export class FormationController {
     async getAll(_req: Request, res: Response): Promise<void> {
         try {
             const formations = await this.getAllFormationsUseCase.execute();
-            res.status(200).json(formations);
+            res.status(200).json(FormationMapper.toResponseList(formations));
         } catch (error: any) {
             res.status(500).json({ error: error.message });
         }
@@ -71,7 +72,11 @@ export class FormationController {
                 return;
             }
             const formation = await this.getFormationByIdUseCase.execute({ id });
-            res.status(200).json(formation);
+            if (!formation) {
+                res.status(404).json({ error: "Formation not found" });
+                return;
+            }
+            res.status(200).json(FormationMapper.toResponse(formation));
         } catch (error: any) {
             res.status(404).json({ error: error.message });
         }
@@ -86,7 +91,11 @@ export class FormationController {
                 return;
             }
             const formation = await this.getFormationByNameUseCase.execute({ name });
-            res.status(200).json(formation);
+            if (!formation) {
+                res.status(404).json({ error: "Formation not found" });
+                return;
+            }
+            res.status(200).json(FormationMapper.toResponse(formation));
         } catch (error: any) {
             res.status(404).json({ error: error.message });
         }
@@ -109,7 +118,11 @@ export class FormationController {
                 midfielders,
                 forwards
             });
-            res.status(200).json(formation);
+            if (!formation) {
+                res.status(404).json({ error: "Formation not found" });
+                return;
+            }
+            res.status(200).json(FormationMapper.toResponse(formation));
         } catch (error: any) {
             res.status(400).json({ error: error.message });
         }

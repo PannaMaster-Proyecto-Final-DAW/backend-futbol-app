@@ -9,6 +9,7 @@ import { SearchPlayersUseCase } from "../../application/use-cases/player/search-
 import { GetPlayersByTierUseCase } from "../../application/use-cases/player/get-by-tier.use-case.js";
 import { GetPlayersByGenderUseCase } from "../../application/use-cases/player/get-by-gender.use-case.js";
 import { PlayerPosition, PlayerGender, GeneralPosition } from "../../domain/entities/player.entity.js";
+import { PlayerMapper } from "../mappers/player.mapper.js";
 
 export class PlayerController {
     constructor(
@@ -49,7 +50,7 @@ export class PlayerController {
                 gender,
                 generalPosition
             });
-            res.status(201).json(player);
+            res.status(201).json(PlayerMapper.toResponse(player));
         } catch (error: any) {
             res.status(400).json({ error: error.message });
         }
@@ -72,7 +73,7 @@ export class PlayerController {
                 gender,
                 generalPosition
             });
-            res.status(200).json(player);
+            res.status(200).json(PlayerMapper.toResponse(player));
         } catch (error: any) {
             res.status(400).json({ error: error.message });
         }
@@ -97,7 +98,7 @@ export class PlayerController {
     async getAll(_req: Request, res: Response): Promise<void> {
         try {
             const players = await this.getAllPlayerUseCase.execute();
-            res.status(200).json(players);
+            res.status(200).json(PlayerMapper.toResponseList(players));
         } catch (error: any) {
             res.status(500).json({ error: error.message });
         }
@@ -112,7 +113,7 @@ export class PlayerController {
                 res.status(404).json({ error: "Player not found" });
                 return;
             }
-            res.status(200).json(player);
+            res.status(200).json(PlayerMapper.toResponse(player));
         } catch (error: any) {
             res.status(404).json({ error: error.message });
         }
@@ -127,7 +128,7 @@ export class PlayerController {
                 res.status(404).json({ error: "Player not found" });
                 return;
             }
-            res.status(200).json(player);
+            res.status(200).json(PlayerMapper.toResponse(player));
         } catch (error: any) {
             res.status(404).json({ error: error.message });
         }
@@ -142,7 +143,7 @@ export class PlayerController {
                 countryId: countryId as string,
                 position: position as PlayerPosition
             });
-            res.status(200).json(players);
+            res.status(200).json(PlayerMapper.toResponseList(players));
         } catch (error: any) {
             res.status(400).json({ error: error.message });
         }
@@ -158,7 +159,7 @@ export class PlayerController {
                 return;
             }
             const players = await this.getPlayersByTierUseCase.execute({ tier: tierNum });
-            res.status(200).json(players);
+            res.status(200).json(PlayerMapper.toResponseList(players));
         } catch (error: any) {
             res.status(500).json({ error: error.message });
         }
@@ -173,7 +174,7 @@ export class PlayerController {
                 return;
             }
             const players = await this.getPlayersByGenderUseCase.execute({ gender });
-            res.status(200).json(players);
+            res.status(200).json(PlayerMapper.toResponseList(players));
         } catch (error: any) {
             res.status(500).json({ error: error.message });
         }

@@ -6,6 +6,7 @@ import { GetCountryByNameUseCase } from "../../application/use-cases/country/get
 import { UpdateCountryUseCase } from "../../application/use-cases/country/update.use-case.js";
 import { DeleteCountryUseCase } from "../../application/use-cases/country/delete.use-case.js";
 import { GetCountriesByTierUseCase } from "../../application/use-cases/country/get-by-tier.use-case.js";
+import { CountryMapper } from "../mappers/country.mapper.js";
 
 export class CountryController {
     /**
@@ -42,7 +43,7 @@ export class CountryController {
 
             const country = await this.createCountryUseCase.execute({ name, pictureUrl, tierMale, tierFemale });
 
-            res.status(201).json(country);
+            res.status(201).json(CountryMapper.toResponse(country));
 
         } catch (error: any) {
             res.status(400).json({ error: error.message });
@@ -53,7 +54,7 @@ export class CountryController {
     async getAll(_req: Request, res: Response): Promise<void> {
         try {
             const countries = await this.getAllCountryUseCase.execute();
-            res.status(200).json(countries);
+            res.status(200).json(CountryMapper.toResponseList(countries));
 
         } catch (error: any) {
             res.status(500).json({ error: error.message });
@@ -69,7 +70,11 @@ export class CountryController {
                 return;
             }
             const country = await this.getCountryByIdUseCase.execute({ id });
-            res.status(200).json(country);
+            if (!country) {
+                res.status(404).json({ error: "Country not found" });
+                return;
+            }
+            res.status(200).json(CountryMapper.toResponse(country));
         } catch (error: any) {
             res.status(404).json({ error: error.message });
         }
@@ -84,7 +89,11 @@ export class CountryController {
                 return;
             }
             const country = await this.getCountryByNameUseCase.execute({ name });
-            res.status(200).json(country);
+            if (!country) {
+                res.status(404).json({ error: "Country not found" });
+                return;
+            }
+            res.status(200).json(CountryMapper.toResponse(country));
         } catch (error: any) {
             res.status(404).json({ error: error.message });
         }
@@ -100,7 +109,11 @@ export class CountryController {
                 return;
             }
             const country = await this.updateCountryUseCase.execute({ id, name, pictureUrl, tierMale, tierFemale });
-            res.status(200).json(country);
+            if (!country) {
+                res.status(404).json({ error: "Country not found" });
+                return;
+            }
+            res.status(200).json(CountryMapper.toResponse(country));
         } catch (error: any) {
             res.status(400).json({ error: error.message });
         }
@@ -139,7 +152,7 @@ export class CountryController {
                 return;
             }
             const countries = await this.getCountriesByTierUseCase.execute({ tier: tierNum, category });
-            res.status(200).json(countries);
+            res.status(200).json(CountryMapper.toResponseList(countries));
         } catch (error: any) {
             res.status(500).json({ error: error.message });
         }
