@@ -1,0 +1,51 @@
+// Express
+import { Router } from "express";
+
+// Controller
+import { CountryController } from "../controllers/country.controller.js";
+
+// Validation
+import { validateRequest } from "./middlewares/validate-request.middleware.js";
+import { createCountrySchema, updateCountrySchema } from "../validation/schemas/country.schema.js";
+
+// Use Cases
+import { CreateCountryUseCase } from "../../application/use-cases/country/create.use-case.js";
+import { GetAllCountryUseCase } from "../../application/use-cases/country/get-all.use-case.js";
+import { GetCountryByIdUseCase } from "../../application/use-cases/country/get-by-id.use-case.js";
+import { GetCountryByNameUseCase } from "../../application/use-cases/country/get-by-name.use-case.js";
+import { UpdateCountryUseCase } from "../../application/use-cases/country/update.use-case.js";
+import { DeleteCountryUseCase } from "../../application/use-cases/country/delete.use-case.js";
+import { GetCountriesByTierUseCase } from "../../application/use-cases/country/get-by-tier.use-case.js";
+import { idGenerator, countryRepository } from "../container.js";
+
+const router = Router();
+
+// Dependency Injection
+const createCountryUseCase = new CreateCountryUseCase(countryRepository, idGenerator);
+const getAllCountryUseCase = new GetAllCountryUseCase(countryRepository);
+const getCountryByIdUseCase = new GetCountryByIdUseCase(countryRepository);
+const getCountryByNameUseCase = new GetCountryByNameUseCase(countryRepository);
+const updateCountryUseCase = new UpdateCountryUseCase(countryRepository);
+const deleteCountryUseCase = new DeleteCountryUseCase(countryRepository);
+const getCountriesByTierUseCase = new GetCountriesByTierUseCase(countryRepository);
+
+const countryController = new CountryController(
+    createCountryUseCase,
+    getAllCountryUseCase,
+    getCountryByIdUseCase,
+    getCountryByNameUseCase,
+    updateCountryUseCase,
+    deleteCountryUseCase,
+    getCountriesByTierUseCase
+);
+
+// Routes
+router.post("/", validateRequest(createCountrySchema), countryController.create);
+router.get("/", countryController.getAll);
+router.get("/id/:id", countryController.getById);
+router.get("/name/:name", countryController.getByName);
+router.get("/tier/:category/:tier", countryController.getByTier);
+router.patch("/:id", validateRequest(updateCountrySchema), countryController.update);
+router.delete("/:id", countryController.delete);
+
+export { router as countryRouter }
