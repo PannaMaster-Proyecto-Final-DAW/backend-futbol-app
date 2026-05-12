@@ -17,7 +17,7 @@ export class LoginUserUseCase {
         private readonly passwordHasher: PasswordHasher
     ) { }
 
-    async execute(input: LoginInput): Promise<Partial<User>> {
+    async execute(input: LoginInput): Promise<Omit<User, 'password'>> {
         // Find user by email or username
         let user: User | null = null;
         

@@ -11,7 +11,7 @@ export const createUserSchema = z.object({
 });
 
 export const loginUserSchema = z.object({
-    email: z.string().email("Invalid email format"),
+    identifier: z.string().min(1, "Identifier is required"),
     password: z.string().min(1, "Password is required")
 });
 

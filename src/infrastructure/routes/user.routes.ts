@@ -17,7 +17,7 @@ import { GetUserByEmailUseCase } from '../../application/use-cases/user/get-by-e
 import { GetUsersByRoleUseCase } from '../../application/use-cases/user/get-by-role.use-case.js';
 import { GetAllUsersUseCase } from '../../application/use-cases/user/get-all.use-case.js';
 import { LoginUserUseCase } from '../../application/use-cases/user/login.use-case.js';
-import { userRepository, passwordHasher, idGenerator } from '../container.js';
+import { userRepository, passwordHasher, idGenerator, tokenService } from '../container.js';
 
 const router = Router();
 
@@ -41,7 +41,8 @@ const userController = new UserController(
     getUserByEmailUseCase,
     getUsersByRoleUseCase,
     getAllUsersUseCase,
-    loginUserUseCase
+    loginUserUseCase,
+    tokenService
 );
 
 // Routes
