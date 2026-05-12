@@ -36,6 +36,7 @@ import { BcryptPasswordHasher } from './services/bcrypt-password.hasher.js';
 import { UuidIdGenerator } from './services/uuid-id.generator.js';
 import { UuidInviteCodeGenerator } from './services/invite-code.generator.js';
 import { CacheService } from './services/cache.service.js';
+import { JwtTokenService } from "./services/jwt-token.service.js";
 
 
 // ============================================================================
@@ -47,6 +48,7 @@ const passwordHasher = new BcryptPasswordHasher();
 const idGenerator = new UuidIdGenerator();
 const inviteCodeGenerator = new UuidInviteCodeGenerator();
 const cacheService = new CacheService();
+const tokenService = new JwtTokenService();
 
 // --- Repository Instances ---
 const countryRepository = new CountryRepositoryImpl(cacheService);
@@ -77,6 +79,7 @@ export {
     passwordHasher,
     idGenerator,
     inviteCodeGenerator,
-    cacheService
+    cacheService,
+    tokenService
 };
 
