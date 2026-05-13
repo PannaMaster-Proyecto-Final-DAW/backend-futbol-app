@@ -88,7 +88,7 @@ export class TeamRepositoryImpl implements TeamRepository {
             console.log('[Cache Miss] Fetching all teams from DB');
             const models = await TeamModel.findAll({ include: [LeagueModel] });
             return models.map(m => this.toEntity(m));
-        }, 3600000); // 1 hour cache
+        });
     }
 
 
@@ -107,7 +107,7 @@ export class TeamRepositoryImpl implements TeamRepository {
             const model = await TeamModel.findByPk(id, { include: [LeagueModel] });
             if (!model) return null;
             return this.toEntity(model);
-        }, 3600000); // 1 hour cache
+        });
     }
 
 
