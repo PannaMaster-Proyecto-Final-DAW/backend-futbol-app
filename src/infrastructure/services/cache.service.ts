@@ -15,7 +15,7 @@ export class CacheService {
     private async init() {
         // In v7, createCache replaces caching('memory', ...)
         this.cache = createCache({
-            ttl: 60 * 1000, // Default TTL in milliseconds (1 minute)
+            ttl: 24 * 60 * 60 * 1000, // Default TTL in milliseconds (24 hours)
         });
     }
 

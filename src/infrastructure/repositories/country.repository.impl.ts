@@ -95,7 +95,7 @@ export class CountryRepositoryImpl implements CountryRepository {
             console.log('[Cache Miss] Fetching all countries from DB');
             const models = await CountryModel.findAll();
             return models.map(m => this.toEntity(m));
-        }, 86400000); // 24 hours cache for countries
+        });
     }
 
 
@@ -114,7 +114,7 @@ export class CountryRepositoryImpl implements CountryRepository {
             const model = await CountryModel.findByPk(id);
             if (!model) return null;
             return this.toEntity(model);
-        }, 86400000); // 24 hours cache
+        });
     }
 
 

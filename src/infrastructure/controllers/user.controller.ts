@@ -9,6 +9,7 @@ import { GetUsersByRoleUseCase } from '../../application/use-cases/user/get-by-r
 import { GetAllUsersUseCase } from '../../application/use-cases/user/get-all.use-case.js';
 import { LoginUserUseCase } from '../../application/use-cases/user/login.use-case.js';
 import { UserRole } from '../../domain/entities/user.entity.js';
+import { TokenService } from '../../application/interfaces/token-service.interface.js';
 
 export class UserController {
     /**
@@ -33,7 +34,8 @@ export class UserController {
         private readonly getUserByEmailUseCase: GetUserByEmailUseCase,
         private readonly getUsersByRoleUseCase: GetUsersByRoleUseCase,
         private readonly getAllUsersUseCase: GetAllUsersUseCase,
-        private readonly loginUserUseCase: LoginUserUseCase
+        private readonly loginUserUseCase: LoginUserUseCase,
+        private readonly tokenService: TokenService // Service to generate JWT tokens
     ) {
         this.create = this.create.bind(this);
         this.update = this.update.bind(this);
@@ -78,7 +80,12 @@ export class UserController {
                 return;
             }
             const user = await this.loginUserUseCase.execute({ identifier, password });
-            res.status(200).json(user);
+            
+            // Generate the JWT token
+            const token = this.tokenService.generateToken({ id: user.id, role: user.role });
+            
+            // Return user and token
+            res.status(200).json({ user, token });
         } catch (error: any) {
             console.error(error);
             const status = error.message === 'Invalid credentials' ? 401 : 500;
