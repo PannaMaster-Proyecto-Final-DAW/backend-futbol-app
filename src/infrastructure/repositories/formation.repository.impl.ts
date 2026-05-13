@@ -97,7 +97,7 @@ export class FormationRepositoryImpl implements FormationRepository {
             console.log('[Cache Miss] Fetching all formations from DB');
             const models = await FormationModel.findAll();
             return models.map(m => this.toEntity(m));
-        }, 86400000); // 24 hours cache
+        });
     }
 
 
@@ -116,7 +116,7 @@ export class FormationRepositoryImpl implements FormationRepository {
             const model = await FormationModel.findByPk(id);
             if (!model) return null;
             return this.toEntity(model);
-        }, 86400000); // 24 hours cache
+        });
     }
 
 

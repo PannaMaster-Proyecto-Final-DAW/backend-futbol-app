@@ -110,7 +110,7 @@ export class PlayerRepositoryImpl implements PlayerRepository {
             console.log('[Cache Miss] Fetching all players from DB');
             const models = await PlayerModel.findAll({ include });
             return models.map(m => this.toEntity(m));
-        }, 300000); // 5 minutes cache
+        });
     }
 
 
@@ -134,7 +134,7 @@ export class PlayerRepositoryImpl implements PlayerRepository {
             const model = await PlayerModel.findByPk(id, { include });
             if (!model) return null;
             return this.toEntity(model);
-        }, 60000); // 1 minute cache
+        });
     }
 
 

@@ -87,7 +87,7 @@ export class LeagueRepositoryImpl implements LeagueRepository {
             console.log('[Cache Miss] Fetching all leagues from DB');
             const models = await LeagueModel.findAll();
             return models.map(m => this.toEntity(m));
-        }, 3600000); // 1 hour cache
+        });
     }
 
 
@@ -106,7 +106,7 @@ export class LeagueRepositoryImpl implements LeagueRepository {
             const model = await LeagueModel.findByPk(id);
             if (!model) return null;
             return this.toEntity(model);
-        }, 3600000); // 1 hour cache
+        });
     }
 
 
