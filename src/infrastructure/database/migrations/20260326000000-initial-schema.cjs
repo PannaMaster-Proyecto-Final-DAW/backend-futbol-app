@@ -345,10 +345,103 @@ module.exports = {
         allowNull: false,
       },
     });
+
+    // 9. Create daily_challenges table
+    await queryInterface.createTable('daily_challenges', {
+      date: {
+        type: Sequelize.DATEONLY,
+        allowNull: false,
+        primaryKey: true,
+      },
+      gameId: {
+        type: Sequelize.STRING,
+        allowNull: false,
+        primaryKey: true,
+      },
+      modeId: {
+        type: Sequelize.STRING,
+        allowNull: false,
+        primaryKey: true,
+      },
+      challengeData: {
+        type: Sequelize.JSONB,
+        allowNull: false,
+      },
+      createdAt: {
+        allowNull: false,
+        type: Sequelize.DATE,
+      },
+      updatedAt: {
+        allowNull: false,
+        type: Sequelize.DATE,
+      },
+    });
+
+    // 10. Create user_game_attempts table
+    await queryInterface.createTable('user_game_attempts', {
+      id: {
+        type: Sequelize.UUID,
+        defaultValue: Sequelize.UUIDV4,
+        allowNull: false,
+        primaryKey: true,
+      },
+      userId: {
+        type: Sequelize.UUID,
+        allowNull: false,
+        references: {
+          model: 'users',
+          key: 'id',
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE',
+      },
+      date: {
+        type: Sequelize.DATEONLY,
+        allowNull: false,
+      },
+      gameId: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
+      modeId: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
+      score: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        defaultValue: 0,
+      },
+      status: {
+        type: Sequelize.ENUM('pending', 'won', 'lost'),
+        allowNull: false,
+        defaultValue: 'pending',
+      },
+      history: {
+        type: Sequelize.JSONB,
+        allowNull: true,
+      },
+      createdAt: {
+        allowNull: false,
+        type: Sequelize.DATE,
+      },
+      updatedAt: {
+        allowNull: false,
+        type: Sequelize.DATE,
+      },
+    });
+
+    // Add unique composite index
+    await queryInterface.addIndex('user_game_attempts', ['userId', 'date', 'gameId'], {
+      unique: true,
+      name: 'user_game_attempt_unique_idx'
+    });
   },
 
   async down(queryInterface, Sequelize) {
     // Drop tables in reverse order of creation
+    await queryInterface.dropTable('user_game_attempts');
+    await queryInterface.dropTable('daily_challenges');
     await queryInterface.dropTable('players');
     await queryInterface.dropTable('user_league_memberships');
     await queryInterface.dropTable('user_leagues');
@@ -359,6 +452,7 @@ module.exports = {
     await queryInterface.dropTable('users');
 
     // Clean up custom types (Postgres specific)
+    await queryInterface.sequelize.query('DROP TYPE IF EXISTS "enum_user_game_attempts_status";');
     await queryInterface.sequelize.query('DROP TYPE IF EXISTS "enum_formations_goalkeeper";');
     await queryInterface.sequelize.query('DROP TYPE IF EXISTS "enum_users_role";');
     await queryInterface.sequelize.query('DROP TYPE IF EXISTS "enum_leagues_category";');
