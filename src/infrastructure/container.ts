@@ -31,6 +31,9 @@ import { UserRepositoryImpl } from './repositories/user.repository.impl.js';
 import { UserLeagueRepositoryImpl } from "./repositories/user-league.repository.impl.js";
 import { UserLeagueMembershipRepositoryImpl } from "./repositories/user-league-membership.repository.impl.js";
 
+import { DailyChallengeRepositoryImpl } from "./repositories/daily-challenge.repository.impl.js";
+import { UserGameAttemptRepositoryImpl } from "./repositories/user-game-attempt.repository.impl.js";
+
 // --- Services ---
 import { BcryptPasswordHasher } from './services/bcrypt-password.hasher.js';
 import { UuidIdGenerator } from './services/uuid-id.generator.js';
@@ -61,6 +64,9 @@ const userRepository = new UserRepositoryImpl();
 const userLeagueRepository = new UserLeagueRepositoryImpl();
 const userLeagueMembershipRepository = new UserLeagueMembershipRepositoryImpl();
 
+const dailyChallengeRepository = new DailyChallengeRepositoryImpl();
+const userGameAttemptRepository = new UserGameAttemptRepositoryImpl();
+
 
 
 // ============================================================================
@@ -76,6 +82,8 @@ export {
     leagueRepository,
     teamRepository,
     playerRepository,
+    dailyChallengeRepository,
+    userGameAttemptRepository,
     passwordHasher,
     idGenerator,
     inviteCodeGenerator,
