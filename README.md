@@ -102,7 +102,7 @@ backend-pannastreet/
 ├── src/
 │   ├── application/      # Application Layer (Use Cases)
 │   │   └── use-cases/    # Business logic orchestration
-│   ├── Domain/           # Domain Layer (Core)
+│   ├── domain/           # Domain Layer (Core)
 │   │   ├── entities/     # Pure business objects/interfaces
 │   │   └── repositories/ # Interfaces for data access
 │   └── infrastructure/   # Infrastructure Layer (External)
